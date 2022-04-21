@@ -9,6 +9,7 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { SeedScene } from "scenes";
+import { AudioData } from "./components/audio";
 import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
@@ -42,6 +43,9 @@ const onAnimationFrameHandler = (timeStamp) => {
   renderer.render(scene, camera);
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
+
+  visualize();
+  time++;
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
 
@@ -55,24 +59,22 @@ const windowResizeHandler = () => {
 windowResizeHandler();
 window.addEventListener("resize", windowResizeHandler, false);
 
-var file = document.getElementById("fileInput");
-var audioinput = document.getElementById("audio");
-var analyser;
-var context;
-var src;
-
-// testing purposes
+// AUDIO
 
 // set up canvas context for visualizer
 var canVas = document.querySelector(".visualizer");
 var canvasCtx = canVas.getContext("2d");
 
+var audiodata = new AudioData();
+let time = 0;
+let lastBeat = 0;
+
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
-var analyser = audioContext.createAnalyser();
+const analyser = audioContext.createAnalyser();
 
-const audioElement = new Audio(soundFile);
-// const audioElement = document.querySelector("audio");
+const audioElement = document.querySelector("audio");
+audioElement.src = soundFile;
 
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(analyser);
@@ -87,7 +89,7 @@ playButton.addEventListener(
     // check if context is in suspended state (autoplay policy)
     if (audioContext.state === "suspended") {
       audioContext.resume();
-      visualize();
+      // visualize();
     }
 
     // play or pause track depending on state
@@ -110,6 +112,68 @@ audioElement.addEventListener(
   false
 );
 
+function visualize() {
+  // analyser.fftSize = 2048;
+  analyser.fftSize = 128;
+  var bufferLength = analyser.frequencyBinCount;
+  var dataArray = new Uint8Array(bufferLength);
+
+  var draw = function () {
+    requestAnimationFrame(draw);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    let instantEnergy = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
+    }
+    audiodata.add(instantEnergy);
+
+    let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
+    let beat = false;
+
+    if (bump) {
+      if (time - lastBeat > 20) {
+        lastBeat = time;
+        beat = true;
+      }
+    }
+
+    // _______________________________________________________
+
+    if (beat) console.log("beat");
+
+    let WIDTH = canVas.width;
+    let HEIGHT = canVas.height;
+
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    canvasCtx.fillStyle = "rgb(0, 0, 0)";
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+    var barWidth = (WIDTH / bufferLength) * 2.5;
+    var barHeight;
+    var x = 0;
+
+    for (var i = 0; i < bufferLength; i++) {
+      barHeight = dataArray[i];
+
+      if (beat || time - lastBeat < 5) {
+        canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+        canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+      } else {
+        canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+        canvasCtx.fillRect(x, 0, barWidth, 0);
+      }
+
+      x += barWidth + 1;
+    }
+  };
+
+  draw();
+}
+
+//------
+
 // function visualize() {
 //   let WIDTH = canVas.width;
 //   let HEIGHT = canVas.height;
@@ -122,6 +186,7 @@ audioElement.addEventListener(
 
 //   var draw = function () {
 //     var drawVisual = requestAnimationFrame(draw);
+//     console.log(dataArray);
 
 //     analyser.getByteTimeDomainData(dataArray);
 
@@ -157,40 +222,40 @@ audioElement.addEventListener(
 //   draw();
 // }
 
-function visualize() {
-  let WIDTH = canVas.width;
-  let HEIGHT = canVas.height;
+// function visualize() {
+//   let WIDTH = canVas.width;
+//   let HEIGHT = canVas.height;
 
-  analyser.fftSize = 256;
-  var bufferLengthAlt = analyser.frequencyBinCount;
-  var dataArrayAlt = new Uint8Array(bufferLengthAlt);
+//   analyser.fftSize = 256;
+//   var bufferLengthAlt = analyser.frequencyBinCount;
+//   var dataArrayAlt = new Uint8Array(bufferLengthAlt);
 
-  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+//   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  var draw = function () {
-    let drawVisual = requestAnimationFrame(draw);
+//   var draw = function () {
+//     let drawVisual = requestAnimationFrame(draw);
 
-    analyser.getByteFrequencyData(dataArrayAlt);
+//     analyser.getByteFrequencyData(dataArrayAlt);
 
-    canvasCtx.fillStyle = "rgb(0, 0, 0)";
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+//     canvasCtx.fillStyle = "rgb(0, 0, 0)";
+//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
-    var barHeight;
-    var x = 0;
+//     var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
+//     var barHeight;
+//     var x = 0;
 
-    for (var i = 0; i < bufferLengthAlt; i++) {
-      barHeight = dataArrayAlt[i];
+//     for (var i = 0; i < bufferLengthAlt; i++) {
+//       barHeight = dataArrayAlt[i];
 
-      canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
-      canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+//       canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+//       canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
 
-      x += barWidth + 1;
-    }
-  };
+//       x += barWidth + 1;
+//     }
+//   };
 
-  draw();
-}
+//   draw();
+// }
 
 // window.addEventListener("click", function () {
 //   audioContext.resume().then(() => {
