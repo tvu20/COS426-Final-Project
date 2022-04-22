@@ -8,12 +8,12 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { SeedScene } from "scenes";
+import { PathTest } from "scenes";
 import { AudioData } from "./components/audio";
 import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
-const scene = new SeedScene();
+const scene = new PathTest();
 const camera = new PerspectiveCamera();
 const renderer = new WebGLRenderer({ antialias: true });
 
@@ -74,10 +74,10 @@ const audioContext = new AudioContext();
 const analyser = audioContext.createAnalyser();
 
 // delay node
-const delayNode = new DelayNode(audioContext, {
-  delayTime: 2,
-  maxDelayTime: 2,
-});
+// const delayNode = new DelayNode(audioContext, {
+//   delayTime: 2,
+//   maxDelayTime: 2,
+// });
 
 const audioElement = document.querySelector("audio");
 audioElement.src = soundFile;
@@ -85,8 +85,9 @@ audioElement.src = soundFile;
 // added delay node here - delete that line to remove
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(analyser);
-analyser.connect(delayNode);
-delayNode.connect(audioContext.destination);
+analyser.connect(audioContext.destination);
+// analyser.connect(delayNode);
+// delayNode.connect(audioContext.destination);
 
 // select our play button
 const playButton = document.querySelector("button");
