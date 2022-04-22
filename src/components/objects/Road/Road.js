@@ -41,6 +41,8 @@ class Road extends Group {
         // adding new block
         this.addBlock();
       } else {
+        // block.position.z += this.movementSpeed;
+        // console.log(block.position.z);
         block.updatePosition();
       }
     }
@@ -52,10 +54,10 @@ class Road extends Group {
       this.initialized = true;
     }
 
-    if (this.state.time - this.state.lastBlock > 20) {
-      this.addBlock();
-      this.state.lastBlock = this.state.time;
-    }
+    // if (this.state.time - this.state.lastBlock > 20) {
+    //   this.addBlock();
+    //   this.state.lastBlock = this.state.time;
+    // }
 
     this.updateBlocks();
 

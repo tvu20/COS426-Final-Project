@@ -25,7 +25,11 @@ class Block extends Group {
   }
 
   updatePosition() {
-    this.position.z += this.parent.movementSpeed;
+    // console.log(this.parent.movementSpeed);
+    let temp = this.position.z + this.parent.movementSpeed;
+    // this.position.z = parseFloat(temp).toPrecision(3);
+    // console.log(parseFloat(temp).toPrecision(3));
+    this.position.z = temp;
   }
 }
 
