@@ -7,15 +7,7 @@ class Block extends Group {
     // Call parent Group() constructor
     super();
 
-    // camera
-    this.state = {
-      cameraPosition: parent.camera.position,
-    };
-
     this.init();
-
-    // Add self to parent's update list
-    parent.addToUpdateList(this);
   }
 
   init() {
@@ -28,13 +20,12 @@ class Block extends Group {
     });
   }
 
-  update(timeStamp) {
-    const { cameraPosition } = this.state;
-    this.position.z += this.parent.state.movementSpeed;
+  remove() {
+    this.remove.apply(this, this.children);
+  }
 
-    if (this.position.z > cameraPosition.z) {
-      this.position.z = 0;
-    }
+  updatePosition() {
+    this.position.z += this.parent.state.movementSpeed;
   }
 }
 
