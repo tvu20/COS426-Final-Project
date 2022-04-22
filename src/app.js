@@ -73,12 +73,20 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 const analyser = audioContext.createAnalyser();
 
+// delay node
+const delayNode = new DelayNode(audioContext, {
+  delayTime: 2,
+  maxDelayTime: 2,
+});
+
 const audioElement = document.querySelector("audio");
 audioElement.src = soundFile;
 
+// added delay node here - delete that line to remove
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(analyser);
-analyser.connect(audioContext.destination);
+analyser.connect(delayNode);
+delayNode.connect(audioContext.destination);
 
 // select our play button
 const playButton = document.querySelector("button");
@@ -112,115 +120,117 @@ audioElement.addEventListener(
   false
 );
 
+// function visualize() {
+//   // analyser.fftSize = 2048;
+//   analyser.fftSize = 128;
+//   var bufferLength = analyser.frequencyBinCount;
+//   var dataArray = new Uint8Array(bufferLength);
+
+//   var draw = function () {
+//     requestAnimationFrame(draw);
+
+//     analyser.getByteFrequencyData(dataArray);
+
+//     let instantEnergy = 0;
+//     for (let i = 0; i < bufferLength; i++) {
+//       instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
+//     }
+//     audiodata.add(instantEnergy);
+
+//     let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
+//     let beat = false;
+
+//     if (bump) {
+//       if (time - lastBeat > 20) {
+//         lastBeat = time;
+//         beat = true;
+//       }
+//     }
+
+//     // _______________________________________________________
+
+//     if (beat) console.log("beat");
+
+//     let WIDTH = canVas.width;
+//     let HEIGHT = canVas.height;
+
+//     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+//     canvasCtx.fillStyle = "rgb(0, 0, 0)";
+//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+//     var barWidth = (WIDTH / bufferLength) * 2.5;
+//     var barHeight;
+//     var x = 0;
+
+//     for (var i = 0; i < bufferLength; i++) {
+//       barHeight = dataArray[i];
+
+//       if (beat || time - lastBeat < 5) {
+//         canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+//         canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+//       } else {
+//         canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
+//         canvasCtx.fillRect(x, 0, barWidth, 0);
+//       }
+
+//       x += barWidth + 1;
+//     }
+//   };
+
+//   draw();
+// }
+
+//------
+
 function visualize() {
-  // analyser.fftSize = 2048;
-  analyser.fftSize = 128;
+  let WIDTH = canVas.width;
+  let HEIGHT = canVas.height;
+
+  analyser.fftSize = 2048;
   var bufferLength = analyser.frequencyBinCount;
   var dataArray = new Uint8Array(bufferLength);
 
+  canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
   var draw = function () {
-    requestAnimationFrame(draw);
+    var drawVisual = requestAnimationFrame(draw);
+    // console.log(dataArray);
 
-    analyser.getByteFrequencyData(dataArray);
+    analyser.getByteTimeDomainData(dataArray);
 
-    let instantEnergy = 0;
-    for (let i = 0; i < bufferLength; i++) {
-      instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
-    }
-    audiodata.add(instantEnergy);
-
-    let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
-    let beat = false;
-
-    if (bump) {
-      if (time - lastBeat > 20) {
-        lastBeat = time;
-        beat = true;
-      }
-    }
-
-    // _______________________________________________________
-
-    if (beat) console.log("beat");
-
-    let WIDTH = canVas.width;
-    let HEIGHT = canVas.height;
-
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-    canvasCtx.fillStyle = "rgb(0, 0, 0)";
+    canvasCtx.fillStyle = "rgb(200, 200, 200)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-    var barWidth = (WIDTH / bufferLength) * 2.5;
-    var barHeight;
+    canvasCtx.lineWidth = 2;
+    canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+    canvasCtx.beginPath();
+
+    var sliceWidth = (WIDTH * 1.0) / bufferLength;
     var x = 0;
 
     for (var i = 0; i < bufferLength; i++) {
-      barHeight = dataArray[i];
+      var v = dataArray[i] / 128.0;
+      var y = (v * HEIGHT) / 2;
+      // var y = (v * HEIGHT) / 2;
 
-      if (beat || time - lastBeat < 5) {
-        canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
-        canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
+      if (i === 0) {
+        canvasCtx.moveTo(x, y);
       } else {
-        canvasCtx.fillStyle = "rgb(" + (barHeight + 100) + ",50,50)";
-        canvasCtx.fillRect(x, 0, barWidth, 0);
+        canvasCtx.lineTo(x, y);
       }
 
-      x += barWidth + 1;
+      x += sliceWidth;
     }
+
+    canvasCtx.lineTo(canVas.width, canVas.height / 2);
+    canvasCtx.stroke();
   };
 
   draw();
 }
 
-//------
-
-// function visualize() {
-//   let WIDTH = canVas.width;
-//   let HEIGHT = canVas.height;
-
-//   analyser.fftSize = 2048;
-//   var bufferLength = analyser.frequencyBinCount;
-//   var dataArray = new Uint8Array(bufferLength);
-
-//   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-//   var draw = function () {
-//     var drawVisual = requestAnimationFrame(draw);
-//     console.log(dataArray);
-
-//     analyser.getByteTimeDomainData(dataArray);
-
-//     canvasCtx.fillStyle = "rgb(200, 200, 200)";
-//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-//     canvasCtx.lineWidth = 2;
-//     canvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-//     canvasCtx.beginPath();
-
-//     var sliceWidth = (WIDTH * 1.0) / bufferLength;
-//     var x = 0;
-
-//     for (var i = 0; i < bufferLength; i++) {
-//       var v = dataArray[i] / 128.0;
-//       var y = (v * HEIGHT) / 2;
-//       // var y = (v * HEIGHT) / 2;
-
-//       if (i === 0) {
-//         canvasCtx.moveTo(x, y);
-//       } else {
-//         canvasCtx.lineTo(x, y);
-//       }
-
-//       x += sliceWidth;
-//     }
-
-//     canvasCtx.lineTo(canVas.width, canVas.height / 2);
-//     canvasCtx.stroke();
-//   };
-
-//   draw();
-// }
+// --------
 
 // function visualize() {
 //   let WIDTH = canVas.width;
