@@ -8,8 +8,10 @@ class Road extends Group {
 
     this.initialized = false;
 
+    this.movementSpeed = 0.1;
+
     this.state = {
-      movementSpeed: parent.state.movementSpeed,
+      // movementSpeed: parent.state.movementSpeed,
       cameraPosition: parent.camera.position,
     };
 
@@ -30,8 +32,11 @@ class Road extends Group {
       const block = this.blocks[i];
 
       if (block.position.z > this.state.cameraPosition.z) {
+        // removing previous block
         this.blocks.shift();
         this.remove(block);
+
+        // adding new block
         this.addBlock();
       } else {
         block.updatePosition();

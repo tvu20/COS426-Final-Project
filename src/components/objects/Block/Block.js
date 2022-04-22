@@ -25,7 +25,7 @@ class Block extends Group {
   }
 
   updatePosition() {
-    this.position.z += this.parent.state.movementSpeed;
+    this.position.z += this.parent.movementSpeed;
   }
 }
 

@@ -13,7 +13,7 @@ class PathTest extends Scene {
     // Init state
     this.state = {
       gui: new Dat.GUI(), // Create GUI for scene
-      movementSpeed: 0.1, // Movement speed
+      //   movementSpeed: 0.1, // Movement speed
       updateList: [],
     };
 
@@ -32,7 +32,7 @@ class PathTest extends Scene {
     // this.add(road, block, lights);
 
     // Populate GUI
-    this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
+    // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
   }
 
   addToUpdateList(object) {
