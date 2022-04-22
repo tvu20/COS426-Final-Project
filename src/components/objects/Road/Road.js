@@ -13,6 +13,8 @@ class Road extends Group {
     this.state = {
       // movementSpeed: parent.state.movementSpeed,
       cameraPosition: parent.camera.position,
+      time: 0,
+      lastBlock: 0,
     };
 
     this.blocks = [];
@@ -50,7 +52,14 @@ class Road extends Group {
       this.initialized = true;
     }
 
+    if (this.state.time - this.state.lastBlock > 20) {
+      this.addBlock();
+      this.state.lastBlock = this.state.time;
+    }
+
     this.updateBlocks();
+
+    this.state.time++;
   }
 }
 
