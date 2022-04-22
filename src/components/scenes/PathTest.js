@@ -1,7 +1,8 @@
 import * as Dat from "dat.gui";
 import { Scene, Color } from "three";
+import { Flower } from "objects";
 import { Block } from "objects";
-// import { Blocks } from "objects";
+import { Landd } from "objects";
 import { BasicLights } from "lights";
 
 class PathTest extends Scene {
@@ -25,9 +26,10 @@ class PathTest extends Scene {
     // Add meshes to scene
     // const path = new Blocks(this);
     const block = new Block(this);
+    const flower = new Flower(this);
+    // const block = new Block(this);
     const lights = new BasicLights();
-    // this.add(path, lights);
-    this.add(block, lights);
+    this.add(flower, block, lights);
 
     // Populate GUI
     this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
