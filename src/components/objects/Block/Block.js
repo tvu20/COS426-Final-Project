@@ -7,6 +7,18 @@ class Block extends Group {
     // Call parent Group() constructor
     super();
 
+    // camera
+    this.state = {
+      cameraPosition: parent.camera.position,
+    };
+
+    this.init();
+
+    // Add self to parent's update list
+    parent.addToUpdateList(this);
+  }
+
+  init() {
     const loader = new GLTFLoader();
 
     this.name = "block";
@@ -14,19 +26,15 @@ class Block extends Group {
     loader.load(MODEL, (gltf) => {
       this.add(gltf.scene);
     });
-
-    // Add self to parent's update list
-    parent.addToUpdateList(this);
   }
 
   update(timeStamp) {
-    this.rotation.z = 0.05 * Math.sin(timeStamp / 300);
-    // const { cameraPosition } = this.state;
-    // this.position.z += this.parent.gameSpeed;
+    const { cameraPosition } = this.state;
+    this.position.z += this.parent.state.movementSpeed;
 
-    // if (this.position.z > cameraPosition.z) {
-    //   this.position.z -= 200;
-    // }
+    if (this.position.z > cameraPosition.z) {
+      this.position.z = 0;
+    }
   }
 }
 

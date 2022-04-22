@@ -13,12 +13,13 @@ import { AudioData } from "./components/audio";
 import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
-const scene = new PathTest();
 const camera = new PerspectiveCamera();
+const scene = new PathTest(camera);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
-camera.position.set(6, 3, -10);
+// camera.position.set(0, 5, 30);
+camera.position.set(0, 10, 20);
 camera.lookAt(new Vector3(0, 0, 0));
 
 // Set up renderer, canvas, and minor CSS adjustments
