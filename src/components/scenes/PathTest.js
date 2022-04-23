@@ -24,12 +24,9 @@ class PathTest extends Scene {
     this.camera = camera;
 
     // Add meshes to scene
-    // const path = new Blocks(this);
-    // const block = new Block(this);
     const road = new Road(this);
     const lights = new BasicLights();
     this.add(road, lights);
-    // this.add(road, block, lights);
 
     // Populate GUI
     // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
