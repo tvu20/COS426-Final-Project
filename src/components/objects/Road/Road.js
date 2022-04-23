@@ -1,4 +1,4 @@
-import { Group } from "three";
+import { Group, Vector3 } from "three";
 import Block from "../Block/Block";
 
 class Road extends Group {
@@ -15,6 +15,9 @@ class Road extends Group {
       cameraPosition: parent.camera.position,
       time: 0,
       lastBlock: 0,
+      blockPos: new Vector3(0, 0, -5),
+      direction: 1,
+      justJumped: false,
     };
 
     this.blocks = [];
@@ -24,10 +27,42 @@ class Road extends Group {
   }
 
   addBlock() {
-    // console.log("adding a block");
+    // updating position
+
+    // direction: -1 = left, 1 = right
+    this.state.blockPos.x += 1.5 * this.state.direction;
+
+    let temp = this.random();
+
+    // jumping state
+    if (temp < 2 && this.state.justJumped == false) {
+      this.state.justJumped = true;
+      return;
+    }
+
+    // changing direction
+    if (temp > 6 && this.state.justJumped == false) {
+      this.state.direction *= -1;
+    }
+
+    this.state.justJumped = false;
+
+    // stopping it from going out of bounds
+    if (this.state.blockPos.x > 5) {
+      this.state.direction = -1;
+    } else if (this.state.blockPos.x < -5) {
+      this.state.direction = 1;
+    }
+
+    // creating the block
     const block = new Block(this);
     this.blocks.push(block);
     this.add(block);
+  }
+
+  // temporary function
+  random() {
+    return Math.floor(Math.random() * 10) + 1;
   }
 
   updateBlocks() {
@@ -50,7 +85,7 @@ class Road extends Group {
       this.initialized = true;
     }
 
-    if (this.state.time - this.state.lastBlock > 40) {
+    if (this.state.time - this.state.lastBlock > 30) {
       this.addBlock();
       this.state.lastBlock = this.state.time;
     }

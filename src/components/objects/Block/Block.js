@@ -7,6 +7,10 @@ class Block extends Group {
     // Call parent Group() constructor
     super();
 
+    this.state = {
+      pos: parent.state.blockPos,
+    };
+
     this.init();
   }
 
@@ -18,6 +22,22 @@ class Block extends Group {
     loader.load(MODEL, (gltf) => {
       this.add(gltf.scene);
     });
+
+    this.rotation.y = Math.PI / 4;
+
+    this.position.x = this.state.pos.x;
+    this.position.y = this.state.pos.y;
+    this.position.z = this.state.pos.z;
+
+    // this.position.set(this.state.pos);
+
+    // console.log(this.parent);
+
+    // this.position = this.parent.state.blockPos;
+
+    // this.position.x = 0;
+    // this.position.y = 0;
+    // this.position.z = -20;
   }
 
   remove() {
