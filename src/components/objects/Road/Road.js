@@ -41,8 +41,6 @@ class Road extends Group {
         // adding new block
         this.addBlock();
       } else {
-        // block.position.z += this.movementSpeed;
-        // console.log(block.position.z);
         block.updatePosition();
       }
     }

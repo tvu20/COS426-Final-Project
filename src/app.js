@@ -45,7 +45,7 @@ const onAnimationFrameHandler = (timeStamp) => {
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
-  visualize();
+  // visualize();
   time++;
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
