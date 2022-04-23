@@ -40,6 +40,14 @@ class PathTest extends Scene {
     this.state.updateList.push(object);
   }
 
+  addBeat() {
+    this.beat = true;
+  }
+
+  removeBeat() {
+    this.beat = false;
+  }
+
   update(timeStamp) {
     const { updateList } = this.state;
 

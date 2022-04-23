@@ -10,7 +10,7 @@ class Road extends Group {
 
     // pathing variables
     this.movementSpeed = 0.075;
-    this.timeDiff = 19;
+    this.timeDiff = 20;
     this.dirChangeFactor = 1.5;
 
     this.state = {
@@ -29,22 +29,23 @@ class Road extends Group {
   }
 
   addBlock() {
-    // updating position
+    let beat = this.parent.beat;
+    let type = this.random();
 
     // direction: -1 = left, 1 = right
     this.state.blockPos.x += this.dirChangeFactor * this.state.direction;
 
-    let temp = this.random();
-
-    // jumping state
-    if (temp < 2 && this.state.justJumped == false) {
-      this.state.justJumped = true;
-      return;
+    // changing direction
+    if (beat && type >= 6 && !this.state.justJumped) {
+      this.state.direction *= -1;
+      this.parent.removeBeat();
     }
 
-    // changing direction
-    if (temp > 6 && this.state.justJumped == false) {
-      this.state.direction *= -1;
+    // jumping
+    if (beat && type < 6 && !this.state.justJumped) {
+      this.state.justJumped = true;
+      this.parent.removeBeat();
+      return;
     }
 
     this.state.justJumped = false;
@@ -82,8 +83,6 @@ class Road extends Group {
   }
 
   update(timeStamp) {
-    if (this.parent.beat) console.log("beat");
-
     if (!this.initialized) {
       this.addBlock();
       this.initialized = true;

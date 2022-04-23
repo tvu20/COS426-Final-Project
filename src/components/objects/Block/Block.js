@@ -28,16 +28,6 @@ class Block extends Group {
     this.position.x = this.state.pos.x;
     this.position.y = this.state.pos.y;
     this.position.z = this.state.pos.z;
-
-    // this.position.set(this.state.pos);
-
-    // console.log(this.parent);
-
-    // this.position = this.parent.state.blockPos;
-
-    // this.position.x = 0;
-    // this.position.y = 0;
-    // this.position.z = -20;
   }
 
   remove() {
@@ -46,7 +36,6 @@ class Block extends Group {
 
   updatePosition() {
     let temp = this.position.z + this.parent.movementSpeed;
-    // this.position.z = parseFloat(temp).toPrecision(3);
     this.position.z = temp;
   }
 }

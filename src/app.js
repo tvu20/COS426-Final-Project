@@ -10,7 +10,8 @@ import { WebGLRenderer, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PathTest } from "scenes";
 import { AudioData } from "./components/audio";
-import soundFile from "./sevenrings.mp3";
+import soundFile from "./meme.mp3";
+// import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
 const camera = new PerspectiveCamera();
@@ -69,9 +70,9 @@ const onAnimationFrameHandler = (timeStamp) => {
     }
   }
 
-  scene.beat = beat;
-
-  // if (beat) console.log("beat");
+  if (beat) {
+    scene.addBeat();
+  }
 
   time++;
 };
