@@ -23,6 +23,10 @@ class PathTest extends Scene {
     // camera
     this.camera = camera;
 
+    // frequency data
+    this.freqData = [];
+    this.beat = false;
+
     // Add meshes to scene
     const road = new Road(this);
     const lights = new BasicLights();

@@ -46,7 +46,33 @@ const onAnimationFrameHandler = (timeStamp) => {
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
-  // visualize();
+  // analyser stuff
+  analyser.fftSize = 128;
+  var bufferLength = analyser.frequencyBinCount;
+  var dataArray = new Uint8Array(bufferLength);
+  analyser.getByteFrequencyData(dataArray);
+  scene.freqData = dataArray;
+
+  let instantEnergy = 0;
+  for (let i = 0; i < bufferLength; i++) {
+    instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
+  }
+  audiodata.add(instantEnergy);
+
+  let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
+  let beat = false;
+
+  if (bump) {
+    if (time - lastBeat > 20) {
+      lastBeat = time;
+      beat = true;
+    }
+  }
+
+  scene.beat = beat;
+
+  // if (beat) console.log("beat");
+
   time++;
 };
 window.requestAnimationFrame(onAnimationFrameHandler);
@@ -100,7 +126,6 @@ playButton.addEventListener(
     // check if context is in suspended state (autoplay policy)
     if (audioContext.state === "suspended") {
       audioContext.resume();
-      // visualize();
     }
 
     // play or pause track depending on state

@@ -14,7 +14,6 @@ class Road extends Group {
     this.dirChangeFactor = 1.5;
 
     this.state = {
-      // movementSpeed: parent.state.movementSpeed,
       cameraPosition: parent.camera.position,
       time: 0,
       lastBlock: 0,
@@ -83,6 +82,8 @@ class Road extends Group {
   }
 
   update(timeStamp) {
+    if (this.parent.beat) console.log("beat");
+
     if (!this.initialized) {
       this.addBlock();
       this.initialized = true;
