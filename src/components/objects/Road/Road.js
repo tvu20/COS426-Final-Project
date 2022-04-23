@@ -8,7 +8,10 @@ class Road extends Group {
 
     this.initialized = false;
 
-    this.movementSpeed = 0.05;
+    // pathing variables
+    this.movementSpeed = 0.075;
+    this.timeDiff = 19;
+    this.dirChangeFactor = 1.5;
 
     this.state = {
       // movementSpeed: parent.state.movementSpeed,
@@ -30,7 +33,7 @@ class Road extends Group {
     // updating position
 
     // direction: -1 = left, 1 = right
-    this.state.blockPos.x += 1.5 * this.state.direction;
+    this.state.blockPos.x += this.dirChangeFactor * this.state.direction;
 
     let temp = this.random();
 
@@ -85,7 +88,7 @@ class Road extends Group {
       this.initialized = true;
     }
 
-    if (this.state.time - this.state.lastBlock > 30) {
+    if (this.state.time - this.state.lastBlock > this.timeDiff) {
       this.addBlock();
       this.state.lastBlock = this.state.time;
     }
