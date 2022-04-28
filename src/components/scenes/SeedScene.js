@@ -34,6 +34,25 @@ class SeedScene extends Scene {
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
     }
 
+    move(direction) {
+        switch(direction){
+            case "ArrowLeft":
+                var obj = this.getObjectByName('ball');
+                obj.left();
+                break;
+            case "ArrowRight":
+                var obj = this.getObjectByName('ball');
+                obj.right();
+
+                break;
+
+            case "ArrowUp":
+                var obj = this.getObjectByName('ball');
+                obj.jump();
+                break;
+        }
+    }
+
     addToUpdateList(object) {
         this.state.updateList.push(object);
     }

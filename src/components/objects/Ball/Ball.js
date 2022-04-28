@@ -14,9 +14,11 @@ class Ball extends Group {
             gui: parent.state.gui,
             jump: this.jump.bind(this),
             left: this.left.bind(this),
-            right:this.right.bind(this),
+            right: this.right.bind(this),
+            fall: this.fall.bind(this),
             isLeft: false,
             isRight: false,
+            isFall: false,
         };
 
         // // Load object
@@ -52,10 +54,22 @@ class Ball extends Group {
 
         // Populate GUI
         // this.state.gui.add(this.state, 'bob');
-        this.state.gui.add(this.state, 'jump');
-        this.state.gui.add(this.state, 'left');
-        this.state.gui.add(this.state, 'right');
+        // this.state.gui.add(this.state, 'jump');
+        // this.state.gui.add(this.state, 'left');
+        // this.state.gui.add(this.state, 'right');
+        this.state.gui.add(this.state, 'fall');
     }
+
+    fall(){
+        this.isFall = true;
+        // this.position.z = this.position.z + 0.03;
+        const fallDown = new TWEEN.Tween(this.position)
+            .to({ y: -10 }, 500)
+            .easing(TWEEN.Easing.Quadratic.In);
+        fallDown.start();
+        
+    }
+
     left(){
         this.isRight = false;
         this.isLeft = true;
@@ -103,6 +117,20 @@ class Ball extends Group {
         }
         if(this.isRight){
             this.right();
+            // console.log("reached here");
+        }
+
+        if(this.isFall){
+            if(this.position.y < -9.8){
+                this.isFall = false;
+                
+            }
+            // this.fall();
+            // let delta = timeStamp/20000;
+            // this.position.y = this.position.y - delta;
+            this.position.z = this.position.z + 0.3;
+            
+            
         }
 
         // Advance tween animations, if any exist
