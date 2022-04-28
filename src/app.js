@@ -88,6 +88,12 @@ const windowResizeHandler = () => {
 windowResizeHandler();
 window.addEventListener("resize", windowResizeHandler, false);
 
+// keydown handler
+window.addEventListener("keydown", (event) => {
+  const key = event.key;
+  scene.move(event.key);
+});
+
 // AUDIO
 
 // set up canvas context for visualizer
