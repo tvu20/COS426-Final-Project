@@ -34,8 +34,6 @@ class Block extends Group {
     this.position.y = this.state.pos.y;
     this.position.z = this.state.pos.z;
 
-    // console.log(this.position.x);
-
     // bounding box exercise
     let geometry = new THREE.BoxGeometry(2, 2, 2);
     const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -43,12 +41,6 @@ class Block extends Group {
     mesh.position.y += 1;
 
     this.bb = mesh;
-    // this.add(mesh);
-    // this.add(collision);
-
-    // this.bb = new THREE.BoxGeometry(0, 0, 0);
-    // // this.bbHelper = new THREE.BoxHelper(this.bb, 0xffff00);
-    // // this.add(this.bbHelper);
   }
 
   remove() {

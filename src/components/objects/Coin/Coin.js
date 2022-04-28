@@ -12,8 +12,7 @@ class Coin extends Group {
       pos: parent.state.blockPos,
     };
 
-    // this.bb;
-    // this.bbHelper;
+    this.bb;
 
     this.init();
   }
@@ -25,13 +24,6 @@ class Coin extends Group {
     loader.load(MODEL, (gltf) => {
       let mesh = gltf.scene;
       this.add(mesh);
-
-      // // asynchronously creates a bounding box
-      // let box = new THREE.Box3().setFromObject(mesh);
-      // this.bb = box;
-
-      // this.bbHelper = new THREE.Box3Helper(this.bb, 0xffff00);
-      // this.add(this.bbHelper);
     });
 
     this.position.x = this.state.pos.x;
@@ -41,6 +33,15 @@ class Coin extends Group {
     this.scale.x = 0.25;
     this.scale.y = 0.25;
     this.scale.z = 0.25;
+
+    // bounding box exercise
+    let geometry = new THREE.BoxGeometry(3, 10, 3);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.y += 0;
+
+    this.bb = mesh;
+    // this.add(mesh);
   }
 
   remove() {
