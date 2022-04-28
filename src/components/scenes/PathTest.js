@@ -1,8 +1,9 @@
 import * as Dat from "dat.gui";
-import { Scene, Color } from "three";
-import { Flower } from "objects";
-import { Block } from "objects";
+import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh } from "three";
+// import { Flower } from "objects";
+// import { Block } from "objects";
 import { Road } from "../objects/Road";
+import Ball from "../objects/Ball/Ball";
 import { BasicLights } from "lights";
 
 class PathTest extends Scene {
@@ -30,10 +31,30 @@ class PathTest extends Scene {
     // Add meshes to scene
     const road = new Road(this);
     const lights = new BasicLights();
-    this.add(road, lights);
+    const ball = new Ball(this);
+    this.add(road, lights, ball);
 
     // Populate GUI
     // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
+  }
+
+  move(direction) {
+    switch (direction) {
+      case "ArrowLeft":
+        var obj = this.getObjectByName("ball");
+        obj.left();
+        break;
+      case "ArrowRight":
+        var obj = this.getObjectByName("ball");
+        obj.right();
+
+        break;
+
+      case "ArrowUp":
+        var obj = this.getObjectByName("ball");
+        obj.jump();
+        break;
+    }
   }
 
   addToUpdateList(object) {
@@ -54,6 +75,11 @@ class PathTest extends Scene {
     // Call update for each object in the updateList
     for (const obj of updateList) {
       obj.update(timeStamp);
+    }
+
+    var obj = this.getObjectByName("ball");
+    if (obj !== undefined && obj.state.isFallen) {
+      this.remove(obj);
     }
   }
 }
