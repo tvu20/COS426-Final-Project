@@ -1,5 +1,6 @@
 import { Group, Vector3 } from "three";
 import Block from "../Block/Block";
+import Coin from "../Coin/Coin";
 
 class Road extends Group {
   constructor(parent) {
@@ -23,6 +24,7 @@ class Road extends Group {
     };
 
     this.blocks = [];
+    this.coins = [];
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
@@ -61,6 +63,15 @@ class Road extends Group {
     const block = new Block(this);
     this.blocks.push(block);
     this.add(block);
+
+    // creating the coin
+    let makeCoin = this.random() < 4;
+
+    if (makeCoin) {
+      const coin = new Coin(this);
+      this.coins.push(coin);
+      this.add(coin);
+    }
   }
 
   // temporary function
@@ -78,6 +89,18 @@ class Road extends Group {
         this.remove(block);
       } else {
         block.updatePosition();
+      }
+    }
+
+    for (let i = 0; i < this.coins.length; i++) {
+      const coin = this.coins[i];
+
+      if (coin.position.z > this.state.cameraPosition.z) {
+        // removing offscreen coin
+        this.coins.shift();
+        this.remove(coin);
+      } else {
+        coin.updatePosition();
       }
     }
   }
