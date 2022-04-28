@@ -1,3 +1,2 @@
-export * from "./Flower";
-export * from "./Land";
-export * from "./Block";
+export * from './Flower';
+export * from './Land';

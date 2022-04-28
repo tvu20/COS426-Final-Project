@@ -1,7 +1,8 @@
 import * as Dat from 'dat.gui';
-import { Scene, Color } from 'three';
+import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh} from 'three';
 import { Flower, Land } from 'objects';
 import { BasicLights } from 'lights';
+import Ball from '../objects/Ball/Ball';
 
 class SeedScene extends Scene {
     constructor() {
@@ -22,7 +23,12 @@ class SeedScene extends Scene {
         const land = new Land();
         const flower = new Flower(this);
         const lights = new BasicLights();
-        this.add(land, flower, lights);
+        // this.add(land, flower, lights);
+        this.add(lights);
+
+        const ball = new Ball(this);
+        
+        this.add(ball);
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
@@ -34,7 +40,7 @@ class SeedScene extends Scene {
 
     update(timeStamp) {
         const { rotationSpeed, updateList } = this.state;
-        this.rotation.y = (rotationSpeed * timeStamp) / 10000;
+        // this.rotation.y = (rotationSpeed * timeStamp) / 10000;
 
         // Call update for each object in the updateList
         for (const obj of updateList) {
