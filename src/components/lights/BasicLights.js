@@ -1,10 +1,4 @@
-import {
-  Group,
-  SpotLight,
-  AmbientLight,
-  HemisphereLight,
-  DirectionalLight,
-} from "three";
+import { Group, SpotLight, AmbientLight, HemisphereLight } from "three";
 
 class BasicLights extends Group {
   constructor(...args) {
@@ -18,18 +12,7 @@ class BasicLights extends Group {
     dir.position.set(5, 1, 2);
     dir.target.position.set(0, 0, 0);
 
-    let color = 0xffffff;
-    let intensity = 1;
-    let light = new DirectionalLight(color, intensity);
-    light.position.set(0, 10, 0);
-    light.target.position.set(-5, -2, -5);
-
-    // this.add(ambi, hemi, dir);
-    // this.add(dir.target);
-    this.add(light);
-    // this.add(light.dir);
-
-    // this.add(ambi, hemi, dir);
+    this.add(ambi, hemi, dir);
   }
 }
 

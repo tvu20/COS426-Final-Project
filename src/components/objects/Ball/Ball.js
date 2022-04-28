@@ -72,7 +72,7 @@ class Ball extends Group {
     this.isFall = true;
     // this.position.z = this.position.z + 0.03;
     const fallDown = new TWEEN.Tween(this.position)
-      .to({ y: -10 }, 500)
+      .to({ y: -10 }, 700) // updated this number from 500
       .easing(TWEEN.Easing.Quadratic.In);
     fallDown.start();
     fallDown.onComplete(() => (this.state.isFallen = true));
