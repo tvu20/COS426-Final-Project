@@ -19,6 +19,7 @@ class Ball extends Group {
             isLeft: false,
             isRight: false,
             isFall: false,
+            isFallen: false,
         };
 
         // // Load object
@@ -67,6 +68,7 @@ class Ball extends Group {
             .to({ y: -10 }, 500)
             .easing(TWEEN.Easing.Quadratic.In);
         fallDown.start();
+        fallDown.onComplete(() => this.state.isFallen = true); 
         
     }
 
@@ -132,6 +134,7 @@ class Ball extends Group {
             
             
         }
+        // console.log(this.state.isFallen);
 
         // Advance tween animations, if any exist
         TWEEN.update();

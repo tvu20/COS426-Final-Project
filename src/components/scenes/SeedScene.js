@@ -32,6 +32,7 @@ class SeedScene extends Scene {
 
         // Populate GUI
         this.state.gui.add(this.state, 'rotationSpeed', -5, 5);
+
     }
 
     move(direction) {
@@ -64,6 +65,12 @@ class SeedScene extends Scene {
         // Call update for each object in the updateList
         for (const obj of updateList) {
             obj.update(timeStamp);
+        }
+
+        var obj = this.getObjectByName('ball');
+        if(obj!== undefined && obj.state.isFallen){
+            // console.log("here");    
+            this.remove(obj);
         }
     }
 }
