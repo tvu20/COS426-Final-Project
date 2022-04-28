@@ -2,14 +2,18 @@ import { Group } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import MODEL from "./scene.gltf";
 
+import * as THREE from "three";
+
 class Coin extends Group {
   constructor(parent) {
-    // Call parent Group() constructor
     super();
 
     this.state = {
       pos: parent.state.blockPos,
     };
+
+    // this.bb;
+    // this.bbHelper;
 
     this.init();
   }
@@ -18,12 +22,17 @@ class Coin extends Group {
     const loader = new GLTFLoader();
 
     this.name = "coin";
-
     loader.load(MODEL, (gltf) => {
-      this.add(gltf.scene);
-    });
+      let mesh = gltf.scene;
+      this.add(mesh);
 
-    // this.rotation.y = Math.PI / 4;
+      // // asynchronously creates a bounding box
+      // let box = new THREE.Box3().setFromObject(mesh);
+      // this.bb = box;
+
+      // this.bbHelper = new THREE.Box3Helper(this.bb, 0xffff00);
+      // this.add(this.bbHelper);
+    });
 
     this.position.x = this.state.pos.x;
     this.position.y = this.state.pos.y + 3;
