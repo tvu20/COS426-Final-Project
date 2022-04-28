@@ -11,8 +11,8 @@ class Road extends Group {
 
     // pathing variables
     this.movementSpeed = 0.075;
-    this.timeDiff = 20;
-    this.dirChangeFactor = 1.5;
+    this.timeDiff = 18.5;
+    this.dirChangeFactor = 1.4;
 
     this.state = {
       cameraPosition: parent.camera.position,
