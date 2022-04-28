@@ -9,12 +9,14 @@ import {
   MeshPhongMaterial,
   Mesh,
 } from "three";
-import MODEL from "./ball.gltf";
+import MODEL from "./scene.gltf";
 
 class Ball extends Group {
   constructor(parent) {
     // Call parent Group() constructor
     super();
+
+    this.rotationVel = 0.05;
 
     // Init state
     this.state = {
@@ -29,42 +31,39 @@ class Ball extends Group {
       isFallen: false,
     };
 
-    // // Load object
-    // const loader = new GLTFLoader();
+    // previous ball shader code
+
+    // this.name = "ball";
+    // var faceradius = 0.2;
+    // var geometry = new SphereGeometry(faceradius, 32, 32); //sphere size
+    // let material = new MeshStandardMaterial({ color: 0x0000ff, roughness: 0 });
+    // var ball = new Mesh(geometry, material);
+    // ball.geometry.dynamic = true;
+    // ball.geometry.verticesNeedUpdate = true;
+
+    // ball.position.x = 0;
+    // ball.position.y = 0;
+    // ball.position.z = 0;
+
+    // ball.scale.x = ball.scale.y = ball.scale.z = 4;
+    // this.add(ball);
+
+    const loader = new GLTFLoader();
 
     this.name = "ball";
-    // loader.load(MODEL, (gltf) => {
-    //     this.add(gltf.scene);
-    // });
-    var faceradius = 0.2;
-    var geometry = new SphereGeometry(faceradius, 32, 32); //sphere size
-    let material = new MeshStandardMaterial({ color: 0x0000ff, roughness: 0 });
-    // var material = new MeshPhongMaterial({
-    //     color: 0x0000ff,
-    //     ambient: 0x000000,
-    //     specular: 0x000000,
-    //     shininess: 50
-    // });
-    var ball = new Mesh(geometry, material);
-    ball.geometry.dynamic = true;
-    ball.geometry.verticesNeedUpdate = true;
-    //particle.geometry.normalsNeedUpdate = true;
+    loader.load(MODEL, (gltf) => {
+      this.add(gltf.scene);
+    });
 
-    ball.position.x = 0;
-    ball.position.y = 0;
-    ball.position.z = 0;
-
-    ball.scale.x = ball.scale.y = ball.scale.z = 4;
-    this.add(ball);
+    this.position.x = 0;
+    this.position.y = 0;
+    this.position.z = 0;
+    this.scale.x = this.scale.y = this.scale.z = 0.25;
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
 
     // Populate GUI
-    // this.state.gui.add(this.state, 'bob');
-    // this.state.gui.add(this.state, 'jump');
-    // this.state.gui.add(this.state, 'left');
-    // this.state.gui.add(this.state, 'right');
     this.state.gui.add(this.state, "fall");
   }
 
@@ -111,21 +110,17 @@ class Ball extends Group {
   }
 
   update(timeStamp) {
-    // if (this.state.bob) {
-    //     // Bob back and forth
-    //     this.rotation.z = 0.05 * Math.sin(timeStamp / 300);
-    // }
-    // if (this.state.twirl > 0) {
-    //     // Lazy implementation of twirl
-    //     this.state.twirl -= Math.PI / 8;
-    //     this.rotation.y += Math.PI / 8;
-    // }
     if (this.isLeft) {
       this.left();
+
+      // rotate the ball a bit
+      this.rotation.z += this.rotationVel;
     }
     if (this.isRight) {
       this.right();
-      // console.log("reached here");
+
+      // rotate the ball a bit
+      this.rotation.z -= this.rotationVel;
     }
 
     if (this.isFall) {
