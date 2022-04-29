@@ -128,8 +128,10 @@ function unpauseGame() {
 function lose() {
   gameOver = true;
   scene.state.gameEnded = true;
-  // scene.state.paused = true;
   console.log("lose");
+  audioElement.pause();
+  currentlyPlaying = false;
+  // this.dataset.playing = "false";
 }
 
 // --------------------
@@ -143,6 +145,7 @@ var canvasCtx = canVas.getContext("2d");
 var audiodata = new AudioData();
 let time = 0;
 let lastBeat = 0;
+let currentlyPlaying = false;
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
@@ -176,14 +179,18 @@ playButton.addEventListener(
     }
 
     // play or pause track depending on state
-    if (this.dataset.playing === "false") {
+    // if (this.dataset.playing === "false") {
+    if (!currentlyPlaying) {
       beginGame();
       audioElement.play();
-      this.dataset.playing = "true";
-    } else if (this.dataset.playing === "true") {
+      currentlyPlaying = true;
+      // this.dataset.playing = "true";
+      // } else if (this.dataset.playing === "true") {
+    } else if (currentlyPlaying) {
       pauseGame();
       audioElement.pause();
-      this.dataset.playing = "false";
+      currentlyPlaying = false;
+      // this.dataset.playing = "false";
     }
   },
   false
@@ -192,7 +199,8 @@ playButton.addEventListener(
 audioElement.addEventListener(
   "ended",
   () => {
-    playButton.dataset.playing = "false";
+    currentlyPlaying = false;
+    // playButton.dataset.playing = "false";
   },
   false
 );

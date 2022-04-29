@@ -22,6 +22,7 @@ class PathTest extends Scene {
       gameStarted: false,
       gameEnded: false,
       paused: false,
+      sinceFalling: 0,
     };
 
     // Set background to a nice color
@@ -63,10 +64,6 @@ class PathTest extends Scene {
         var obj = this.getObjectByName("ball");
         obj.jump();
         break;
-
-      // case "ArrowDown":
-      //   var obj = this.getObjectByName("ball");
-      //   obj.fall();
     }
   }
 
@@ -127,6 +124,16 @@ class PathTest extends Scene {
 
       if (!this.state.offTrack) {
         this.findCollision();
+      }
+
+      // if falling
+      if (this.state.offTrack) {
+        this.state.sinceFalling++;
+        if (this.state.sinceFalling > 80) {
+          this.state.offTrack = false;
+          this.state.paused = true;
+          this.state.gameStarted = false;
+        }
       }
     }
   }
