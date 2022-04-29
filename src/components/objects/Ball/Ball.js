@@ -16,7 +16,9 @@ class Ball extends Group {
     // Call parent Group() constructor
     super();
 
+    this.movementVel = 0.0725;
     this.rotationVel = 0.05;
+    this.yPos = 2.5;
 
     // Init state
     this.state = {
@@ -56,9 +58,9 @@ class Ball extends Group {
     });
 
     this.position.x = 0;
-    this.position.y = 0;
+    this.position.y = this.yPos;
     this.position.z = 0;
-    this.scale.x = this.scale.y = this.scale.z = 0.25;
+    this.scale.x = this.scale.y = this.scale.z = 0.14;
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
@@ -80,12 +82,12 @@ class Ball extends Group {
   left() {
     this.isRight = false;
     this.isLeft = true;
-    this.position.x = this.position.x - 0.03;
+    this.position.x = this.position.x - this.movementVel;
   }
   right() {
     this.isLeft = false;
     this.isRight = true;
-    this.position.x = this.position.x + 0.03;
+    this.position.x = this.position.x + this.movementVel;
   }
 
   jump() {
@@ -99,7 +101,7 @@ class Ball extends Group {
       .to({ y: this.position.y + 3 }, 300)
       .easing(TWEEN.Easing.Quadratic.Out);
     const fallDown = new TWEEN.Tween(this.position)
-      .to({ y: 0 }, 300)
+      .to({ y: this.yPos }, 300)
       .easing(TWEEN.Easing.Quadratic.In);
 
     // Fall down after jumping up

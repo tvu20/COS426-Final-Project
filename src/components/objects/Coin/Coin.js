@@ -27,7 +27,7 @@ class Coin extends Group {
     });
 
     this.position.x = this.state.pos.x;
-    this.position.y = this.state.pos.y + 3;
+    this.position.y = this.state.pos.y + 2;
     this.position.z = this.state.pos.z;
 
     this.scale.x = 0.25;
