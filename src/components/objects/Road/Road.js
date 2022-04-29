@@ -37,9 +37,7 @@ class Road extends Group {
     this.add(initBlock);
 
     // adding to the collision array
-    // console.log(this.initBlock.bb);
     this.blockCollisions = [...this.blockCollisions, this.initBlock.bb];
-    // this.blockCollsions.push(this.initBlock.bb);
   }
 
   addBlock() {

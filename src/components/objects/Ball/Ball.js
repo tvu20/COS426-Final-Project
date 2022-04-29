@@ -55,7 +55,8 @@ class Ball extends Group {
     parent.addToUpdateList(this);
 
     // collision box
-    let geometry = new THREE.BoxGeometry(5, 8, 5);
+    let geometry = new THREE.BoxGeometry(3, 8, 3);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const material = new THREE.MeshBasicMaterial({
       opacity: 0,
       transparent: true,
@@ -67,17 +68,19 @@ class Ball extends Group {
     this.bb = mesh;
 
     // Populate GUI
-    this.state.gui.add(this.state, "fall");
+    // this.state.gui.add(this.state, "fall");
   }
 
   fall() {
     this.isFall = true;
-    // this.movementVel = this.movementVel * 2;
-    this.rotationVel = this.rotationVel * 2;
-    // this.position.z = this.position.z + 0.03;
+
     const fallDown = new TWEEN.Tween(this.position)
-      .to({ y: -10 }, 1800) // updated this number from 500
+      .to({ y: -10 }, 700) // updated this number from 500
       .easing(TWEEN.Easing.Quadratic.In);
+
+    // const fallDown = new TWEEN.Tween(this.position)
+    //   .to({ y: -10 }, 1800) // updated this number from 500
+    //   .easing(TWEEN.Easing.Quadratic.In);
     fallDown.start();
     fallDown.onComplete(() => (this.state.isFallen = true));
   }

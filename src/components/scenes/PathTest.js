@@ -18,6 +18,7 @@ class PathTest extends Scene {
       //   movementSpeed: 0.1, // Movement speed
       updateList: [],
       sinceLastCollision: 0,
+      offTrack: false,
     };
 
     // Set background to a nice color
@@ -60,9 +61,9 @@ class PathTest extends Scene {
         obj.jump();
         break;
 
-      case "ArrowDown":
-        var obj = this.getObjectByName("ball");
-        obj.fall();
+      // case "ArrowDown":
+      //   var obj = this.getObjectByName("ball");
+      //   obj.fall();
     }
   }
 
@@ -83,7 +84,6 @@ class PathTest extends Scene {
 
     let ballMesh = this.ball.bb;
     let ballBB = new THREE.Box3().setFromObject(ballMesh);
-    // console.log(ballBB);
 
     for (const mesh of roadCollisions) {
       let meshBB = new THREE.Box3();
@@ -93,32 +93,17 @@ class PathTest extends Scene {
       if (
         ballBB.intersectsBox(meshBB) ||
         this.ball.position.y > this.ball.yPos
-        // this.ball.positiion.y > this.ball.yPos
       ) {
-        // this.ball.fall();
-        // console.log("collision");
         this.state.sinceLastCollision = 0;
-        // this.ball.state.isFallen = true;
       } else {
         this.state.sinceLastCollision++;
-        // console.log("not colliding");
-        // if (this.ball.position.y <= this.ball.yPos) {
-        //   console.log("fall");
-        // }
-        // console.log("no collision");
       }
 
-      // if (this.state.sinceLastCollision > 50) console.log("fall");
-
-      // console.log(meshBB);
-      // let meshBB =
-      // let meshBB = new THREE.Box3().setFromObject(mesh);
-      // console.log(meshBB);
-
-      // if (this.ball.bb.intersectsBox(mesh)) {
-      //   console.log("touching");
-      //   // this.ball.state.isFallen = true;
-      // }
+      if (this.state.sinceLastCollision > 20) {
+        var obj = this.getObjectByName("ball");
+        obj.fall();
+        this.state.offTrack = true;
+      }
     }
   }
 
@@ -136,7 +121,9 @@ class PathTest extends Scene {
       //enter game end state
     }
 
-    this.findCollision();
+    if (!this.state.offTrack) {
+      this.findCollision();
+    }
   }
 }
 
