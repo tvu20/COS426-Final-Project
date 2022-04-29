@@ -120,35 +120,6 @@ class PathTest extends Scene {
       //   // this.ball.state.isFallen = true;
       // }
     }
-
-    // let ballBB = new THREE.Box3();
-    // ballMesh.geometry.computeBoundingBox();
-
-    // ballBB
-    //   .copy(ballMesh.geometry.boundingBox)
-    //   .applyMatrix4(ballMesh.matrixWorld);
-
-    // console.log(this.ball.bb);
-    // console.log(ballBB);
-
-    // let ballBB = new THREE.Box3()
-    //   .copy(this.ball.bb)
-    //   .applyMatrix4(this.ball.matrixWorld);
-
-    // console.log(this.ball.bb);
-
-    // let ballBB = new THREE.Box3().setFromObject(ballMesh);
-
-    // this.add(ballBB);
-
-    // let ballBB = new THREE.Box3()
-    //   .copy(this.ball.bb)
-    //   .applyMatrix4(this.ball.matrixWorld);
-
-    // console.log(this.ball.bb);
-    // console.log(ballBB);
-    // console.log(roadCollisions);
-    // for (const mesh of this.state.)
   }
 
   update(timeStamp) {

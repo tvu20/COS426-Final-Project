@@ -1,6 +1,7 @@
 import { Group, Vector3 } from "three";
 import Block from "../Block/Block";
 import Coin from "../Coin/Coin";
+import { InitBlock } from "../InitBlock";
 
 class Road extends Group {
   constructor(parent) {
@@ -29,6 +30,16 @@ class Road extends Group {
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
+
+    // create the initial block
+    const initBlock = new InitBlock(this);
+    this.initBlock = initBlock;
+    this.add(initBlock);
+
+    // adding to the collision array
+    // console.log(this.initBlock.bb);
+    this.blockCollisions = [...this.blockCollisions, this.initBlock.bb];
+    // this.blockCollsions.push(this.initBlock.bb);
   }
 
   addBlock() {
@@ -118,6 +129,17 @@ class Road extends Group {
     if (this.state.time - this.state.lastBlock > this.timeDiff) {
       this.addBlock();
       this.state.lastBlock = this.state.time;
+    }
+
+    // handle the initial block
+    if (this.initBlock != null) {
+      if (this.initBlock.position.z > this.state.cameraPosition.z + 3.5) {
+        this.remove(this.initBlock);
+        this.blockCollisions.shift();
+        this.initBlock = null;
+      } else {
+        this.initBlock.updatePosition();
+      }
     }
 
     this.updateBlocks();
