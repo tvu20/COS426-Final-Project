@@ -19,6 +19,7 @@ class PathTest extends Scene {
       updateList: [],
       sinceLastCollision: 0,
       offTrack: false,
+      gameStarted: false,
     };
 
     // Set background to a nice color
@@ -110,19 +111,21 @@ class PathTest extends Scene {
   update(timeStamp) {
     const { updateList } = this.state;
 
-    // Call update for each object in the updateList
-    for (const obj of updateList) {
-      obj.update(timeStamp);
-    }
+    if (this.state.gameStarted && !this.state.paused) {
+      // Call update for each object in the updateList
+      for (const obj of updateList) {
+        obj.update(timeStamp);
+      }
 
-    var obj = this.getObjectByName("ball");
-    if (obj !== undefined && obj.state.isFallen) {
-      this.remove(obj);
-      //enter game end state
-    }
+      var obj = this.getObjectByName("ball");
+      if (obj !== undefined && obj.state.isFallen) {
+        this.remove(obj);
+        //enter game end state
+      }
 
-    if (!this.state.offTrack) {
-      this.findCollision();
+      if (!this.state.offTrack) {
+        this.findCollision();
+      }
     }
   }
 }
