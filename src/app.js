@@ -51,6 +51,10 @@ const onAnimationFrameHandler = (timeStamp) => {
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
 
+  if (scene.state.offTrack && !scene.state.gameEnded) {
+    lose();
+  }
+
   // analyser stuff
   analyser.fftSize = 128;
   var bufferLength = analyser.frequencyBinCount;
@@ -119,6 +123,13 @@ function pauseGame() {
 
 function unpauseGame() {
   scene.state.paused = false;
+}
+
+function lose() {
+  gameOver = true;
+  scene.state.gameEnded = true;
+  // scene.state.paused = true;
+  console.log("lose");
 }
 
 // --------------------

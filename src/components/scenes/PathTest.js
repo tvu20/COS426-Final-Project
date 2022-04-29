@@ -20,6 +20,8 @@ class PathTest extends Scene {
       sinceLastCollision: 0,
       offTrack: false,
       gameStarted: false,
+      gameEnded: false,
+      paused: false,
     };
 
     // Set background to a nice color
