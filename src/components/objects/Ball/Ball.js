@@ -55,7 +55,7 @@ class Ball extends Group {
     parent.addToUpdateList(this);
 
     // collision box
-    let geometry = new THREE.BoxGeometry(3, 8, 3);
+    let geometry = new THREE.BoxGeometry(1, 8, 1);
     // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const material = new THREE.MeshBasicMaterial({
       opacity: 0,
