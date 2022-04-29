@@ -36,7 +36,10 @@ class Block extends Group {
 
     // bounding box exercise
     let geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    const material = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true,
+    });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.y += 1;
 
