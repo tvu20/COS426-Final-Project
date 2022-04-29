@@ -88,6 +88,8 @@ class Road extends Group {
       if (block.position.z > this.state.cameraPosition.z) {
         // removing offscreen block
         this.blocks.shift();
+        this.blockCollisions.shift();
+        this.remove(block.bb);
         this.remove(block);
       } else {
         block.updatePosition();

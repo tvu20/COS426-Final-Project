@@ -17,6 +17,7 @@ class PathTest extends Scene {
       gui: new Dat.GUI(), // Create GUI for scene
       //   movementSpeed: 0.1, // Movement speed
       updateList: [],
+      sinceLastCollision: 0,
     };
 
     // Set background to a nice color
@@ -89,12 +90,25 @@ class PathTest extends Scene {
       mesh.geometry.computeBoundingBox();
       meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
 
-      if (ballBB.intersectsBox(meshBB)) {
+      if (
+        ballBB.intersectsBox(meshBB) ||
+        this.ball.position.y > this.ball.yPos
+        // this.ball.positiion.y > this.ball.yPos
+      ) {
+        // this.ball.fall();
         // console.log("collision");
+        this.state.sinceLastCollision = 0;
         // this.ball.state.isFallen = true;
       } else {
+        this.state.sinceLastCollision++;
+        // console.log("not colliding");
+        // if (this.ball.position.y <= this.ball.yPos) {
+        //   console.log("fall");
+        // }
         // console.log("no collision");
       }
+
+      // if (this.state.sinceLastCollision > 50) console.log("fall");
 
       // console.log(meshBB);
       // let meshBB =

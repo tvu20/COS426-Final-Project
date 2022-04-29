@@ -39,7 +39,10 @@ class Ball extends Group {
     const loader = new GLTFLoader();
 
     this.name = "ball";
+
+    this.model;
     loader.load(MODEL, (gltf) => {
+      this.model = gltf.scene;
       this.add(gltf.scene);
     });
 
@@ -52,9 +55,13 @@ class Ball extends Group {
     parent.addToUpdateList(this);
 
     // collision box
-    let geometry = new THREE.BoxGeometry(6, 8, 6);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    let geometry = new THREE.BoxGeometry(5, 8, 5);
+    const material = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true,
+    });
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.material.transparent = true;
     this.add(mesh);
 
     this.bb = mesh;
@@ -112,13 +119,15 @@ class Ball extends Group {
       this.left();
 
       // rotate the ball a bit
-      this.rotation.z += this.rotationVel;
+      //   this.rotation.z += this.rotationVel;
+      this.model.rotation.z += this.rotationVel;
     }
     if (this.isRight) {
       this.right();
 
       // rotate the ball a bit
-      this.rotation.z -= this.rotationVel;
+      this.model.rotation.z -= this.rotationVel;
+      //   this.rotation.z -= this.rotationVel;
     }
 
     if (this.isFall) {
