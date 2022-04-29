@@ -18,6 +18,8 @@ class Ball extends Group {
 
     this.movementVel = 0.0725;
     this.rotationVel = 0.05;
+    this.fallVel = 0.145;
+    this.fallRot = 0.1;
     this.yPos = 2.5;
 
     // Init state
@@ -71,9 +73,11 @@ class Ball extends Group {
 
   fall() {
     this.isFall = true;
+    // this.movementVel = this.movementVel * 2;
+    this.rotationVel = this.rotationVel * 2;
     // this.position.z = this.position.z + 0.03;
     const fallDown = new TWEEN.Tween(this.position)
-      .to({ y: -10 }, 700) // updated this number from 500
+      .to({ y: -10 }, 1800) // updated this number from 500
       .easing(TWEEN.Easing.Quadratic.In);
     fallDown.start();
     fallDown.onComplete(() => (this.state.isFallen = true));
@@ -126,13 +130,26 @@ class Ball extends Group {
     }
 
     if (this.isFall) {
-      if (this.position.y < -9.8) {
+      if (this.position.y < -9.9) {
         this.isFall = false;
       }
+      
       // this.fall();
       // let delta = timeStamp/20000;
       // this.position.y = this.position.y - delta;
-      this.position.z = this.position.z + 0.3;
+      // if(this.isLeft) {
+      //   this.left();
+      //   this.left();
+      //   this.rotation.z += this.rotationVel;
+      //   // console.log("here");
+      // }
+      // if(this.isRight){
+      //   this.right();
+      //   this.right();
+      //   this.rotation.z -= this.rotationVel;
+
+      // }
+      // this.position.x = this.position.x + this.fallVel;
     }
     // console.log(this.state.isFallen);
 

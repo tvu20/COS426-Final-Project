@@ -54,6 +54,11 @@ class PathTest extends Scene {
         var obj = this.getObjectByName("ball");
         obj.jump();
         break;
+
+      case "ArrowDown":
+        var obj = this.getObjectByName("ball");
+        obj.fall();
+
     }
   }
 
@@ -80,6 +85,7 @@ class PathTest extends Scene {
     var obj = this.getObjectByName("ball");
     if (obj !== undefined && obj.state.isFallen) {
       this.remove(obj);
+      //enter game end state
     }
   }
 }
