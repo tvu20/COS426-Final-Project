@@ -1,4 +1,5 @@
 import * as Dat from "dat.gui";
+import * as THREE from "three";
 import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh } from "three";
 // import { Flower } from "objects";
 // import { Block } from "objects";
@@ -16,6 +17,8 @@ class PathTest extends Scene {
       gui: new Dat.GUI(), // Create GUI for scene
       //   movementSpeed: 0.1, // Movement speed
       updateList: [],
+      sinceLastCollision: 0,
+      offTrack: false,
     };
 
     // Set background to a nice color
@@ -33,6 +36,9 @@ class PathTest extends Scene {
     const lights = new BasicLights();
     const ball = new Ball(this);
     this.add(road, lights, ball);
+
+    this.road = road;
+    this.ball = ball;
 
     // Populate GUI
     // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
@@ -54,6 +60,10 @@ class PathTest extends Scene {
         var obj = this.getObjectByName("ball");
         obj.jump();
         break;
+
+      // case "ArrowDown":
+      //   var obj = this.getObjectByName("ball");
+      //   obj.fall();
     }
   }
 
@@ -69,6 +79,34 @@ class PathTest extends Scene {
     this.beat = false;
   }
 
+  findCollision() {
+    let roadCollisions = this.road.blockCollisions;
+
+    let ballMesh = this.ball.bb;
+    let ballBB = new THREE.Box3().setFromObject(ballMesh);
+
+    for (const mesh of roadCollisions) {
+      let meshBB = new THREE.Box3();
+      mesh.geometry.computeBoundingBox();
+      meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+
+      if (
+        ballBB.intersectsBox(meshBB) ||
+        this.ball.position.y > this.ball.yPos
+      ) {
+        this.state.sinceLastCollision = 0;
+      } else {
+        this.state.sinceLastCollision++;
+      }
+
+      if (this.state.sinceLastCollision > 20) {
+        var obj = this.getObjectByName("ball");
+        obj.fall();
+        this.state.offTrack = true;
+      }
+    }
+  }
+
   update(timeStamp) {
     const { updateList } = this.state;
 
@@ -80,6 +118,11 @@ class PathTest extends Scene {
     var obj = this.getObjectByName("ball");
     if (obj !== undefined && obj.state.isFallen) {
       this.remove(obj);
+      //enter game end state
+    }
+
+    if (!this.state.offTrack) {
+      this.findCollision();
     }
   }
 }

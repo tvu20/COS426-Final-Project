@@ -3,16 +3,16 @@
     {
       "bufferView": 2,
       "componentType": 5126,
-      "count": 2399,
-      "max": [1.0, 2.0, 1.0],
-      "min": [-1.0, 0.0, -1.0],
+      "count": 24,
+      "max": [1.0, 1.0, 2.0000030994415283],
+      "min": [-1.0, -1.0000009536743164, 3.000000106112566e-6],
       "type": "VEC3"
     },
     {
       "bufferView": 2,
-      "byteOffset": 28788,
+      "byteOffset": 288,
       "componentType": 5126,
-      "count": 2399,
+      "count": 24,
       "max": [1.0, 1.0, 1.0],
       "min": [-1.0, -1.0, -1.0],
       "type": "VEC3"
@@ -20,47 +20,47 @@
     {
       "bufferView": 1,
       "componentType": 5126,
-      "count": 2399,
-      "max": [1.0, 1.0],
-      "min": [0.0, 0.0],
+      "count": 24,
+      "max": [0.9999709725379944, 0.9999799728393555],
+      "min": [2.9000000722589903e-5, 3.7999998312443495e-5],
       "type": "VEC2"
     },
     {
       "bufferView": 0,
       "componentType": 5125,
-      "count": 13536,
+      "count": 36,
       "type": "SCALAR"
     }
   ],
   "asset": {
     "extras": {
-      "author": "rawwerks (https://sketchfab.com/rawwerks)",
+      "author": "Render at Night (https://sketchfab.com/Render_at_Night)",
       "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
-      "source": "https://sketchfab.com/3d-models/sphere-gltf-example-cd602a89287b4cf1a704c13e15cf48f8",
-      "title": "sphere-gltf-example"
+      "source": "https://sketchfab.com/3d-models/minecraft-grass-block-84938a8f3f8d4a0aa64aaa9c4e4d27d3",
+      "title": "Minecraft Grass Block"
     },
-    "generator": "Sketchfab-12.65.0",
+    "generator": "Sketchfab-12.68.0",
     "version": "2.0"
   },
   "bufferViews": [
     {
       "buffer": 0,
-      "byteLength": 54144,
+      "byteLength": 144,
       "name": "floatBufferViews",
       "target": 34963
     },
     {
       "buffer": 0,
-      "byteLength": 19192,
-      "byteOffset": 54144,
+      "byteLength": 192,
+      "byteOffset": 144,
       "byteStride": 8,
       "name": "floatBufferViews",
       "target": 34962
     },
     {
       "buffer": 0,
-      "byteLength": 57576,
-      "byteOffset": 73336,
+      "byteLength": 576,
+      "byteOffset": 336,
       "byteStride": 12,
       "name": "floatBufferViews",
       "target": 34962
@@ -68,23 +68,25 @@
   ],
   "buffers": [
     {
-      "byteLength": 130912,
-      "uri": "scene.bin"
+      "byteLength": 912,
+      "uri": "src/components/objects/Block/scene.bin"
     }
   ],
-  "extensionsUsed": ["KHR_materials_transmission"],
+  "images": [
+    {
+      "uri": "src/components/textures/Block/Grass_Block_TEX_baseColor.png"
+    }
+  ],
   "materials": [
     {
-      "extensions": {
-        "KHR_materials_transmission": {
-          "transmissionFactor": 0.0
-        }
-      },
-      "name": "GLASS",
+      "doubleSided": true,
+      "name": "Grass_Block_TEX",
       "pbrMetallicRoughness": {
-        "baseColorFactor": [0.99, 0.99, 0.99, 1.0],
+        "baseColorTexture": {
+          "index": 0
+        },
         "metallicFactor": 0.0,
-        "roughnessFactor": 0.0
+        "roughnessFactor": 0.9563479129602599
       }
     }
   ],
@@ -130,37 +132,19 @@
     },
     {
       "children": [2],
-      "name": "root"
-    },
-    {
-      "children": [3],
-      "matrix": [
-        1.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        2.220446049250313e-16,
-        1.0,
-        0.0,
-        0.0,
-        -1.0,
-        2.220446049250313e-16,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "name": "GLTF_SceneRootNode"
-    },
-    {
-      "children": [4],
-      "name": "Sphere_1"
+      "name": "Grass_Block.obj.cleaner.materialmerger.gles"
     },
     {
       "mesh": 0,
-      "name": "Object_4"
+      "name": "Object_2"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
     }
   ],
   "scene": 0,
@@ -168,6 +152,12 @@
     {
       "name": "Sketchfab_Scene",
       "nodes": [0]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
     }
   ]
 }

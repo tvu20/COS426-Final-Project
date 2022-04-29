@@ -1,4 +1,5 @@
 import { Group } from "three";
+import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
 import {
@@ -9,12 +10,18 @@ import {
   MeshPhongMaterial,
   Mesh,
 } from "three";
-import MODEL from "./ball.gltf";
+import MODEL from "./scene.gltf";
 
 class Ball extends Group {
   constructor(parent) {
     // Call parent Group() constructor
     super();
+
+    this.movementVel = 0.0725;
+    this.rotationVel = 0.05;
+    this.fallVel = 0.145;
+    this.fallRot = 0.1;
+    this.yPos = 2.5;
 
     // Init state
     this.state = {
@@ -29,51 +36,51 @@ class Ball extends Group {
       isFallen: false,
     };
 
-    // // Load object
-    // const loader = new GLTFLoader();
+    const loader = new GLTFLoader();
 
     this.name = "ball";
-    // loader.load(MODEL, (gltf) => {
-    //     this.add(gltf.scene);
-    // });
-    var faceradius = 0.2;
-    var geometry = new SphereGeometry(faceradius, 32, 32); //sphere size
-    let material = new MeshStandardMaterial({ color: 0x0000ff, roughness: 0 });
-    // var material = new MeshPhongMaterial({
-    //     color: 0x0000ff,
-    //     ambient: 0x000000,
-    //     specular: 0x000000,
-    //     shininess: 50
-    // });
-    var ball = new Mesh(geometry, material);
-    ball.geometry.dynamic = true;
-    ball.geometry.verticesNeedUpdate = true;
-    //particle.geometry.normalsNeedUpdate = true;
 
-    ball.position.x = 0;
-    ball.position.y = 0;
-    ball.position.z = 0;
+    this.model;
+    loader.load(MODEL, (gltf) => {
+      this.model = gltf.scene;
+      this.add(gltf.scene);
+    });
 
-    ball.scale.x = ball.scale.y = ball.scale.z = 4;
-    this.add(ball);
+    this.position.x = 0;
+    this.position.y = this.yPos;
+    this.position.z = 2;
+    this.scale.x = this.scale.y = this.scale.z = 0.14;
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
 
+    // collision box
+    let geometry = new THREE.BoxGeometry(3, 8, 3);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true,
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.material.transparent = true;
+    this.add(mesh);
+
+    this.bb = mesh;
+
     // Populate GUI
-    // this.state.gui.add(this.state, 'bob');
-    // this.state.gui.add(this.state, 'jump');
-    // this.state.gui.add(this.state, 'left');
-    // this.state.gui.add(this.state, 'right');
-    this.state.gui.add(this.state, "fall");
+    // this.state.gui.add(this.state, "fall");
   }
 
   fall() {
     this.isFall = true;
-    // this.position.z = this.position.z + 0.03;
+
     const fallDown = new TWEEN.Tween(this.position)
       .to({ y: -10 }, 700) // updated this number from 500
       .easing(TWEEN.Easing.Quadratic.In);
+
+    // const fallDown = new TWEEN.Tween(this.position)
+    //   .to({ y: -10 }, 1800) // updated this number from 500
+    //   .easing(TWEEN.Easing.Quadratic.In);
     fallDown.start();
     fallDown.onComplete(() => (this.state.isFallen = true));
   }
@@ -81,12 +88,12 @@ class Ball extends Group {
   left() {
     this.isRight = false;
     this.isLeft = true;
-    this.position.x = this.position.x - 0.03;
+    this.position.x = this.position.x - this.movementVel;
   }
   right() {
     this.isLeft = false;
     this.isRight = true;
-    this.position.x = this.position.x + 0.03;
+    this.position.x = this.position.x + this.movementVel;
   }
 
   jump() {
@@ -100,7 +107,7 @@ class Ball extends Group {
       .to({ y: this.position.y + 3 }, 300)
       .easing(TWEEN.Easing.Quadratic.Out);
     const fallDown = new TWEEN.Tween(this.position)
-      .to({ y: 0 }, 300)
+      .to({ y: this.yPos }, 300)
       .easing(TWEEN.Easing.Quadratic.In);
 
     // Fall down after jumping up
@@ -111,31 +118,42 @@ class Ball extends Group {
   }
 
   update(timeStamp) {
-    // if (this.state.bob) {
-    //     // Bob back and forth
-    //     this.rotation.z = 0.05 * Math.sin(timeStamp / 300);
-    // }
-    // if (this.state.twirl > 0) {
-    //     // Lazy implementation of twirl
-    //     this.state.twirl -= Math.PI / 8;
-    //     this.rotation.y += Math.PI / 8;
-    // }
     if (this.isLeft) {
       this.left();
+
+      // rotate the ball a bit
+      //   this.rotation.z += this.rotationVel;
+      this.model.rotation.z += this.rotationVel;
     }
     if (this.isRight) {
       this.right();
-      // console.log("reached here");
+
+      // rotate the ball a bit
+      this.model.rotation.z -= this.rotationVel;
+      //   this.rotation.z -= this.rotationVel;
     }
 
     if (this.isFall) {
-      if (this.position.y < -9.8) {
+      if (this.position.y < -9.9) {
         this.isFall = false;
       }
+
       // this.fall();
       // let delta = timeStamp/20000;
       // this.position.y = this.position.y - delta;
-      this.position.z = this.position.z + 0.3;
+      // if(this.isLeft) {
+      //   this.left();
+      //   this.left();
+      //   this.rotation.z += this.rotationVel;
+      //   // console.log("here");
+      // }
+      // if(this.isRight){
+      //   this.right();
+      //   this.right();
+      //   this.rotation.z -= this.rotationVel;
+
+      // }
+      // this.position.x = this.position.x + this.fallVel;
     }
     // console.log(this.state.isFallen);
 

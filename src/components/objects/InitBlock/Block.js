@@ -1,11 +1,11 @@
 import { Group } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import MODEL from "./scene.gltf";
-
 import * as THREE from "three";
 
-class Coin extends Group {
+class Block extends Group {
   constructor(parent) {
+    // Call parent Group() constructor
     super();
 
     this.state = {
@@ -13,6 +13,7 @@ class Coin extends Group {
     };
 
     this.bb;
+    this.bbHelper;
 
     this.init();
   }
@@ -20,28 +21,31 @@ class Coin extends Group {
   init() {
     const loader = new GLTFLoader();
 
-    this.name = "coin";
+    this.name = "block";
+
     loader.load(MODEL, (gltf) => {
       let mesh = gltf.scene;
       this.add(mesh);
     });
 
-    this.position.x = this.state.pos.x;
-    this.position.y = this.state.pos.y + 2;
-    this.position.z = this.state.pos.z;
+    this.rotation.y = Math.PI / 4;
 
-    this.scale.x = 0.25;
-    this.scale.y = 0.25;
-    this.scale.z = 0.25;
+    this.position.x = 0;
+    this.position.y = this.state.pos.y;
+    this.position.z = 2;
+    this.scale.set(5, 1, 5);
 
     // bounding box exercise
-    let geometry = new THREE.BoxGeometry(3, 10, 3);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    let geometry = new THREE.BoxGeometry(2, 2, 2);
+    const material = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true,
+    });
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y += 0;
+    mesh.position.y += 1;
 
     this.bb = mesh;
-    // this.add(mesh);
+    this.add(this.bb);
   }
 
   remove() {
@@ -51,10 +55,7 @@ class Coin extends Group {
   updatePosition() {
     let temp = this.position.z + this.parent.movementSpeed;
     this.position.z = temp;
-
-    // rotating the thing
-    this.rotation.y += 0.1;
   }
 }
 
-export default Coin;
+export default Block;
