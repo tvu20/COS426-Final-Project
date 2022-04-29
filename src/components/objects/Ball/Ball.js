@@ -1,4 +1,5 @@
 import { Group } from "three";
+import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { TWEEN } from "three/examples/jsm/libs/tween.module.min.js";
 import {
@@ -35,23 +36,6 @@ class Ball extends Group {
       isFallen: false,
     };
 
-    // previous ball shader code
-
-    // this.name = "ball";
-    // var faceradius = 0.2;
-    // var geometry = new SphereGeometry(faceradius, 32, 32); //sphere size
-    // let material = new MeshStandardMaterial({ color: 0x0000ff, roughness: 0 });
-    // var ball = new Mesh(geometry, material);
-    // ball.geometry.dynamic = true;
-    // ball.geometry.verticesNeedUpdate = true;
-
-    // ball.position.x = 0;
-    // ball.position.y = 0;
-    // ball.position.z = 0;
-
-    // ball.scale.x = ball.scale.y = ball.scale.z = 4;
-    // this.add(ball);
-
     const loader = new GLTFLoader();
 
     this.name = "ball";
@@ -61,11 +45,19 @@ class Ball extends Group {
 
     this.position.x = 0;
     this.position.y = this.yPos;
-    this.position.z = 0;
+    this.position.z = 2;
     this.scale.x = this.scale.y = this.scale.z = 0.14;
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
+
+    // collision box
+    let geometry = new THREE.BoxGeometry(6, 8, 6);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    const mesh = new THREE.Mesh(geometry, material);
+    this.add(mesh);
+
+    this.bb = mesh;
 
     // Populate GUI
     this.state.gui.add(this.state, "fall");
@@ -133,7 +125,7 @@ class Ball extends Group {
       if (this.position.y < -9.9) {
         this.isFall = false;
       }
-      
+
       // this.fall();
       // let delta = timeStamp/20000;
       // this.position.y = this.position.y - delta;

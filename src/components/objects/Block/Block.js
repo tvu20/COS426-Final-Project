@@ -41,6 +41,7 @@ class Block extends Group {
     mesh.position.y += 1;
 
     this.bb = mesh;
+    this.add(this.bb);
   }
 
   remove() {

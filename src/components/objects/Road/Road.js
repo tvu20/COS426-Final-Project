@@ -24,6 +24,7 @@ class Road extends Group {
     };
 
     this.blocks = [];
+    this.blockCollisions = [];
     this.coins = [];
 
     // Add self to parent's update list
@@ -62,6 +63,7 @@ class Road extends Group {
     // creating the block
     const block = new Block(this);
     this.blocks.push(block);
+    this.blockCollisions.push(block.bb);
     this.add(block);
 
     // creating the coin

@@ -1,4 +1,5 @@
 import * as Dat from "dat.gui";
+import * as THREE from "three";
 import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh } from "three";
 // import { Flower } from "objects";
 // import { Block } from "objects";
@@ -34,6 +35,9 @@ class PathTest extends Scene {
     const ball = new Ball(this);
     this.add(road, lights, ball);
 
+    this.road = road;
+    this.ball = ball;
+
     // Populate GUI
     // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
   }
@@ -58,7 +62,6 @@ class PathTest extends Scene {
       case "ArrowDown":
         var obj = this.getObjectByName("ball");
         obj.fall();
-
     }
   }
 
@@ -74,6 +77,66 @@ class PathTest extends Scene {
     this.beat = false;
   }
 
+  findCollision() {
+    let roadCollisions = this.road.blockCollisions;
+
+    let ballMesh = this.ball.bb;
+    let ballBB = new THREE.Box3().setFromObject(ballMesh);
+    // console.log(ballBB);
+
+    for (const mesh of roadCollisions) {
+      let meshBB = new THREE.Box3();
+      mesh.geometry.computeBoundingBox();
+      meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+
+      if (ballBB.intersectsBox(meshBB)) {
+        // console.log("collision");
+        // this.ball.state.isFallen = true;
+      } else {
+        // console.log("no collision");
+      }
+
+      // console.log(meshBB);
+      // let meshBB =
+      // let meshBB = new THREE.Box3().setFromObject(mesh);
+      // console.log(meshBB);
+
+      // if (this.ball.bb.intersectsBox(mesh)) {
+      //   console.log("touching");
+      //   // this.ball.state.isFallen = true;
+      // }
+    }
+
+    // let ballBB = new THREE.Box3();
+    // ballMesh.geometry.computeBoundingBox();
+
+    // ballBB
+    //   .copy(ballMesh.geometry.boundingBox)
+    //   .applyMatrix4(ballMesh.matrixWorld);
+
+    // console.log(this.ball.bb);
+    // console.log(ballBB);
+
+    // let ballBB = new THREE.Box3()
+    //   .copy(this.ball.bb)
+    //   .applyMatrix4(this.ball.matrixWorld);
+
+    // console.log(this.ball.bb);
+
+    // let ballBB = new THREE.Box3().setFromObject(ballMesh);
+
+    // this.add(ballBB);
+
+    // let ballBB = new THREE.Box3()
+    //   .copy(this.ball.bb)
+    //   .applyMatrix4(this.ball.matrixWorld);
+
+    // console.log(this.ball.bb);
+    // console.log(ballBB);
+    // console.log(roadCollisions);
+    // for (const mesh of this.state.)
+  }
+
   update(timeStamp) {
     const { updateList } = this.state;
 
@@ -87,6 +150,8 @@ class PathTest extends Scene {
       this.remove(obj);
       //enter game end state
     }
+
+    this.findCollision();
   }
 }
 
