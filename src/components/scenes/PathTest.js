@@ -23,6 +23,7 @@ class PathTest extends Scene {
       gameEnded: false,
       paused: false,
       sinceFalling: 0,
+      score: 0,
     };
 
     // Set background to a nice color
@@ -49,7 +50,7 @@ class PathTest extends Scene {
   }
 
   move(direction) {
-    let EPS = 0.5;
+    let EPS = 1;
     let onGround = this.ball.position.y <= this.ball.yPos + EPS;
 
     switch (direction) {
@@ -79,6 +80,10 @@ class PathTest extends Scene {
     this.beat = false;
   }
 
+  incrementScore() {
+    this.state.score++;
+  }
+
   findCollision() {
     let roadCollisions = this.road.blockCollisions;
     let coinCollisions = this.road.coinCollisions;
@@ -96,10 +101,10 @@ class PathTest extends Scene {
         ballBB.intersectsBox(meshBB) ||
         this.ball.position.y > this.ball.yPos
       ) {
-        console.log("collide");
+        // console.log("collide");
         this.state.sinceLastCollision = 0;
       } else {
-        console.log("not collide");
+        // console.log("not collide");
         this.state.sinceLastCollision++;
       }
 
@@ -110,20 +115,23 @@ class PathTest extends Scene {
       }
     }
 
-    // // coin collisions
-    // for (const mesh of coinCollisions) {
-    //   let meshBB = new THREE.Box3();
-    //   mesh.geometry.computeBoundingBox();
-    //   meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+    // coin collisions
+    for (let i = 0; i < coinCollisions.length; i++) {
+      let mesh = coinCollisions[i];
+      // for (const mesh of coinCollisions) {
+      let meshBB = new THREE.Box3();
+      mesh.geometry.computeBoundingBox();
+      meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
 
-    //   if (
-    //     ballBB.intersectsBox(meshBB) ||
-    //     this.ball.position.y > this.ball.yPos
-    //   ) {
-    //     this.road.removeCoin(mesh);
-    //   }
-    // }
-    // console.log(coinCollisions);
+      if (ballBB.intersectsBox(meshBB)) {
+        let currentCoin = this.road.coins[i];
+
+        if (!currentCoin.state.collected) {
+          currentCoin.collect();
+          this.incrementScore();
+        }
+      }
+    }
   }
 
   update(timeStamp) {

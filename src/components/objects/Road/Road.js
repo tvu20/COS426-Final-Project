@@ -110,14 +110,22 @@ class Road extends Group {
     for (let i = 0; i < this.coins.length; i++) {
       const coin = this.coins[i];
 
-      if (coin.position.z > this.state.cameraPosition.z) {
-        // removing offscreen coin
-        this.coins.shift();
-        this.coinCollisions.shift();
+      // collecting the coin
+      if (coin.state.collected) {
+        this.coins = this.coins.filter((c) => c !== coin);
+        this.coinCollisions = this.coinCollisions.filter((c) => c !== coin.bb);
         this.remove(coin.bb);
         this.remove(coin);
       } else {
-        coin.updatePosition();
+        if (coin.position.z > this.state.cameraPosition.z) {
+          // removing offscreen coin
+          this.coins.shift();
+          this.coinCollisions.shift();
+          this.remove(coin.bb);
+          this.remove(coin);
+        } else {
+          coin.updatePosition();
+        }
       }
     }
   }
