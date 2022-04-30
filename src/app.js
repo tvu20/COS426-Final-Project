@@ -11,6 +11,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PathTest } from "scenes";
 import { AudioData } from "./components/audio";
 import soundFile from "./meme.mp3";
+// import "./app.css";
 // import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
@@ -43,48 +44,6 @@ controls.enablePan = false;
 controls.minDistance = 4;
 controls.maxDistance = 16;
 controls.update();
-
-// Render loop
-const onAnimationFrameHandler = (timeStamp) => {
-  controls.update();
-  renderer.render(scene, camera);
-  scene.update && scene.update(timeStamp);
-  window.requestAnimationFrame(onAnimationFrameHandler);
-
-  if (scene.state.offTrack && !scene.state.gameEnded) {
-    lose();
-  }
-
-  // analyser stuff
-  analyser.fftSize = 128;
-  var bufferLength = analyser.frequencyBinCount;
-  var dataArray = new Uint8Array(bufferLength);
-  analyser.getByteFrequencyData(dataArray);
-  scene.freqData = dataArray;
-
-  let instantEnergy = 0;
-  for (let i = 0; i < bufferLength; i++) {
-    instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
-  }
-  audiodata.add(instantEnergy);
-
-  let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
-  let beat = false;
-
-  if (bump) {
-    if (time - lastBeat > 20) {
-      lastBeat = time;
-      beat = true;
-    }
-  }
-
-  if (beat) {
-    scene.addBeat();
-  }
-
-  time++;
-};
-window.requestAnimationFrame(onAnimationFrameHandler);
 
 // Resize Handler
 const windowResizeHandler = () => {
@@ -133,6 +92,12 @@ function lose() {
   currentlyPlaying = false;
   // this.dataset.playing = "false";
 }
+
+// score
+let score = 0;
+let scoreDiv = document.getElementById("score");
+scoreDiv.innerHTML = "Score: " + score;
+// document.body.appendChild(scoreDiv);
 
 // --------------------
 // AUDIO
@@ -254,3 +219,54 @@ audioElement.addEventListener(
 
 //   draw();
 // }
+
+// --------------------
+// RENDER HANDLER
+// --------------------
+
+const onAnimationFrameHandler = (timeStamp) => {
+  controls.update();
+  renderer.render(scene, camera);
+  scene.update && scene.update(timeStamp);
+  window.requestAnimationFrame(onAnimationFrameHandler);
+
+  if (scene.state.offTrack && !scene.state.gameEnded) {
+    lose();
+  }
+
+  // scoring
+  if (scene.state.score != score) {
+    score = scene.state.score;
+    scoreDiv.innerHTML = "Score: " + score;
+  }
+
+  // analyser stuff
+  analyser.fftSize = 128;
+  var bufferLength = analyser.frequencyBinCount;
+  var dataArray = new Uint8Array(bufferLength);
+  analyser.getByteFrequencyData(dataArray);
+  scene.freqData = dataArray;
+
+  let instantEnergy = 0;
+  for (let i = 0; i < bufferLength; i++) {
+    instantEnergy += (dataArray[i] / 256) * (dataArray[i] / 256);
+  }
+  audiodata.add(instantEnergy);
+
+  let bump = audiodata.averageLocalEnergy() * 1.15 < instantEnergy;
+  let beat = false;
+
+  if (bump) {
+    if (time - lastBeat > 20) {
+      lastBeat = time;
+      beat = true;
+    }
+  }
+
+  if (beat) {
+    scene.addBeat();
+  }
+
+  time++;
+};
+window.requestAnimationFrame(onAnimationFrameHandler);

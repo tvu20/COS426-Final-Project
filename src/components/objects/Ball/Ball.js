@@ -56,11 +56,11 @@ class Ball extends Group {
 
     // collision box
     let geometry = new THREE.BoxGeometry(0.5, 10, 0.5);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    // const material = new THREE.MeshBasicMaterial({
-    //   opacity: 0,
-    //   transparent: true,
-    // });
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const material = new THREE.MeshBasicMaterial({
+      opacity: 0,
+      transparent: true,
+    });
     const mesh = new THREE.Mesh(geometry, material);
     mesh.material.transparent = true;
     this.add(mesh);
