@@ -49,20 +49,20 @@ class PathTest extends Scene {
   }
 
   move(direction) {
+    let EPS = 0.5;
+    let onGround = this.ball.position.y <= this.ball.yPos + EPS;
+
     switch (direction) {
       case "ArrowLeft":
-        var obj = this.getObjectByName("ball");
-        obj.left();
+        if (onGround) this.ball.left();
         break;
       case "ArrowRight":
-        var obj = this.getObjectByName("ball");
-        obj.right();
+        if (onGround) this.ball.right();
 
         break;
 
       case "ArrowUp":
-        var obj = this.getObjectByName("ball");
-        obj.jump();
+        this.ball.jump();
         break;
     }
   }
@@ -81,10 +81,12 @@ class PathTest extends Scene {
 
   findCollision() {
     let roadCollisions = this.road.blockCollisions;
+    let coinCollisions = this.road.coinCollisions;
 
     let ballMesh = this.ball.bb;
     let ballBB = new THREE.Box3().setFromObject(ballMesh);
 
+    // road collisions
     for (const mesh of roadCollisions) {
       let meshBB = new THREE.Box3();
       mesh.geometry.computeBoundingBox();
@@ -94,8 +96,10 @@ class PathTest extends Scene {
         ballBB.intersectsBox(meshBB) ||
         this.ball.position.y > this.ball.yPos
       ) {
+        console.log("collide");
         this.state.sinceLastCollision = 0;
       } else {
+        console.log("not collide");
         this.state.sinceLastCollision++;
       }
 
@@ -105,6 +109,21 @@ class PathTest extends Scene {
         this.state.offTrack = true;
       }
     }
+
+    // // coin collisions
+    // for (const mesh of coinCollisions) {
+    //   let meshBB = new THREE.Box3();
+    //   mesh.geometry.computeBoundingBox();
+    //   meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+
+    //   if (
+    //     ballBB.intersectsBox(meshBB) ||
+    //     this.ball.position.y > this.ball.yPos
+    //   ) {
+    //     this.road.removeCoin(mesh);
+    //   }
+    // }
+    // console.log(coinCollisions);
   }
 
   update(timeStamp) {

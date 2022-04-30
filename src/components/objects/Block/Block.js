@@ -13,7 +13,7 @@ class Block extends Group {
     };
 
     this.bb;
-    this.bbHelper;
+    // this.bbHelper;
 
     this.init();
   }

@@ -27,6 +27,7 @@ class Road extends Group {
     this.blocks = [];
     this.blockCollisions = [];
     this.coins = [];
+    this.coinCollisions = [];
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
@@ -81,6 +82,7 @@ class Road extends Group {
     if (makeCoin) {
       const coin = new Coin(this);
       this.coins.push(coin);
+      this.coinCollisions.push(coin.bb);
       this.add(coin);
     }
   }
@@ -111,6 +113,8 @@ class Road extends Group {
       if (coin.position.z > this.state.cameraPosition.z) {
         // removing offscreen coin
         this.coins.shift();
+        this.coinCollisions.shift();
+        this.remove(coin.bb);
         this.remove(coin);
       } else {
         coin.updatePosition();
