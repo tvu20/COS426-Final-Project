@@ -32,10 +32,14 @@ class PathTest extends Scene {
     // camera
     this.camera = camera;
 
+    // this.init();
+
     // frequency data
     this.freqData = [];
     this.beat = false;
+  }
 
+  init() {
     // Add meshes to scene
     const road = new Road(this);
     const lights = new BasicLights();
@@ -44,9 +48,6 @@ class PathTest extends Scene {
 
     this.road = road;
     this.ball = ball;
-
-    // Populate GUI
-    // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
   }
 
   move(direction) {
@@ -59,7 +60,6 @@ class PathTest extends Scene {
         break;
       case "ArrowRight":
         if (onGround) this.ball.right();
-
         break;
 
       case "ArrowUp":

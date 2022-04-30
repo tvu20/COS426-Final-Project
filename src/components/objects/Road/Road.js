@@ -131,6 +131,8 @@ class Road extends Group {
   }
 
   update(timeStamp) {
+    this.state.time++;
+
     if (!this.initialized) {
       this.addBlock();
       this.initialized = true;
@@ -151,10 +153,8 @@ class Road extends Group {
         this.initBlock.updatePosition();
       }
     }
-
     this.updateBlocks();
-
-    this.state.time++;
+    // this.state.time++;
   }
 }
 

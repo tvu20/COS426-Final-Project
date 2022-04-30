@@ -10,9 +10,13 @@ import { WebGLRenderer, PerspectiveCamera, Vector3, Fog, Color } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PathTest } from "scenes";
 import { AudioData } from "./components/audio";
-import soundFile from "./meme.mp3";
+import soundFile from "./sevenrings.mp3";
 // import "./app.css";
 // import soundFile from "./sevenrings.mp3";
+
+// --------------------
+// THREE.JS INITIALIZATION
+// --------------------
 
 // Initialize core ThreeJS components
 const camera = new PerspectiveCamera();
@@ -67,21 +71,23 @@ window.addEventListener("keydown", (event) => {
 
 // control variables
 let gameOver = false;
-let paused = false;
+let initialized = false;
 let gameStarted = false;
 
 function beginGame() {
+  audioElement.play();
   scene.state.gameStarted = true;
   scene.state.paused = false;
   gameStarted = true;
+
+  if (!initialized) {
+    scene.init();
+    initialized = true;
+  }
 }
 
 function pauseGame() {
   scene.state.paused = true;
-}
-
-function unpauseGame() {
-  scene.state.paused = false;
 }
 
 function lose() {
@@ -89,15 +95,14 @@ function lose() {
   scene.state.gameEnded = true;
   console.log("lose");
   audioElement.pause();
+  audioElement.currentTime = 0;
   currentlyPlaying = false;
-  // this.dataset.playing = "false";
 }
 
 // score
 let score = 0;
 let scoreDiv = document.getElementById("score");
 scoreDiv.innerHTML = "Score: " + score;
-// document.body.appendChild(scoreDiv);
 
 // --------------------
 // AUDIO
@@ -116,21 +121,17 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 const analyser = audioContext.createAnalyser();
 
-// delay node
+// // delay node
 // const delayNode = new DelayNode(audioContext, {
-//   delayTime: 2,
-//   maxDelayTime: 2,
+//   delayTime: 0.5,
+//   maxDelayTime: 0.5,
 // });
 
 const audioElement = document.querySelector("audio");
 audioElement.src = soundFile;
-
-// added delay node here - delete that line to remove
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(analyser);
 analyser.connect(audioContext.destination);
-// analyser.connect(delayNode);
-// delayNode.connect(audioContext.destination);
 
 // select our play button
 const playButton = document.querySelector("button");
@@ -169,56 +170,6 @@ audioElement.addEventListener(
   },
   false
 );
-
-//-------
-
-// function visualize() {
-//   let WIDTH = canVas.width;
-//   let HEIGHT = canVas.height;
-
-//   analyser.fftSize = 2048;
-//   var bufferLength = analyser.frequencyBinCount;
-//   var dataArray = new Uint8Array(bufferLength);
-
-//   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-
-//   var draw = function () {
-//     var drawVisual = requestAnimationFrame(draw);
-//     // console.log(dataArray);
-
-//     analyser.getByteTimeDomainData(dataArray);
-
-//     canvasCtx.fillStyle = "rgb(200, 200, 200)";
-//     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-//     canvasCtx.lineWidth = 2;
-//     canvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-//     canvasCtx.beginPath();
-
-//     var sliceWidth = (WIDTH * 1.0) / bufferLength;
-//     var x = 0;
-
-//     for (var i = 0; i < bufferLength; i++) {
-//       var v = dataArray[i] / 128.0;
-//       var y = (v * HEIGHT) / 2;
-//       // var y = (v * HEIGHT) / 2;
-
-//       if (i === 0) {
-//         canvasCtx.moveTo(x, y);
-//       } else {
-//         canvasCtx.lineTo(x, y);
-//       }
-
-//       x += sliceWidth;
-//     }
-
-//     canvasCtx.lineTo(canVas.width, canVas.height / 2);
-//     canvasCtx.stroke();
-//   };
-
-//   draw();
-// }
 
 // --------------------
 // RENDER HANDLER

@@ -39,7 +39,7 @@ class Coin extends Group {
     this.scale.z = 0.25;
 
     // bounding box exercise
-    let geometry = new THREE.BoxGeometry(2, 3, 2);
+    let geometry = new THREE.BoxGeometry(3, 3, 3);
     // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
     const material = new THREE.MeshBasicMaterial({
       opacity: 0,
