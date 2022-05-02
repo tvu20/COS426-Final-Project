@@ -38,9 +38,10 @@ class SeedScene extends Scene {
 
         // Call update for each object in the updateList
         for (const obj of updateList) {
+            console.log(obj);
             obj.update(timeStamp);
         }
     }
 }
 
-export default SeedScene;
+export { SeedScene };

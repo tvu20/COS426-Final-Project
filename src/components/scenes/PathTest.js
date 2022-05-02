@@ -1,8 +1,7 @@
 import * as Dat from "dat.gui";
 import * as THREE from "three";
+import { Vector3 } from 'three';
 import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh } from "three";
-// import { Flower } from "objects";
-// import { Block } from "objects";
 import { Road } from "../objects/Road";
 import Ball from "../objects/Ball/Ball";
 import { BasicLights } from "lights";
@@ -19,6 +18,7 @@ class PathTest extends Scene {
       updateList: [],
       sinceLastCollision: 0,
       offTrack: false,
+      gameOver: false,
     };
 
     // Set background to a nice color
@@ -118,7 +118,9 @@ class PathTest extends Scene {
     var obj = this.getObjectByName("ball");
     if (obj !== undefined && obj.state.isFallen) {
       this.remove(obj);
-      //enter game end state
+      this.state.gameOver = true;
+      console.log("GOT TO GAME OVER");
+      console.log(this.state.gameOver);
     }
 
     if (!this.state.offTrack) {

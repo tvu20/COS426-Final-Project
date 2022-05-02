@@ -9,13 +9,14 @@
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PathTest } from "scenes";
+import {gameOver } from 'scenes';
 import { AudioData } from "./components/audio";
 import soundFile from "./meme.mp3";
 // import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
 const camera = new PerspectiveCamera();
-const scene = new PathTest(camera);
+var scene = new PathTest(camera);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
@@ -46,6 +47,13 @@ const onAnimationFrameHandler = (timeStamp) => {
   renderer.render(scene, camera);
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
+
+  // check if we need to switch to the gameOver scene
+  if (scene.state.gameOver  == true){
+        console.log('got in the app loop');
+        var gOScene = new gameOver();
+        scene = gOScene;
+    }
 
   // analyser stuff
   analyser.fftSize = 128;
