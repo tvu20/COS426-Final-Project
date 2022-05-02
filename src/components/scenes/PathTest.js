@@ -1,8 +1,13 @@
 import * as Dat from "dat.gui";
 import * as THREE from "three";
-import { Scene, Color, SphereGeometry, MeshPhongMaterial, Mesh } from "three";
-// import { Flower } from "objects";
-// import { Block } from "objects";
+import {
+  Scene,
+  Color,
+  SphereGeometry,
+  MeshPhongMaterial,
+  Mesh,
+  Vector3,
+} from "three";
 import { Road } from "../objects/Road";
 import Ball from "../objects/Ball/Ball";
 import { BasicLights } from "lights";
@@ -157,9 +162,14 @@ class PathTest extends Scene {
       if (this.state.offTrack) {
         this.state.sinceFalling++;
         if (this.state.sinceFalling > 80) {
-          this.state.offTrack = false;
-          this.state.paused = true;
-          this.state.gameStarted = false;
+          // testing yasmine's code
+          this.state.gameEnded = true;
+          console.log("GOT TO GAME OVER");
+          // console.log(this.state.gameEnded);
+
+          // this.state.offTrack = false;
+          // this.state.paused = true;
+          // this.state.gameStarted = false;
         }
       }
     }

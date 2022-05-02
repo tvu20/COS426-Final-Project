@@ -8,7 +8,7 @@
  */
 import { WebGLRenderer, PerspectiveCamera, Vector3, Fog, Color } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { PathTest } from "scenes";
+import { PathTest, GameOver } from "scenes";
 import { AudioData } from "./components/audio";
 import soundFile from "./sevenrings.mp3";
 // import "./app.css";
@@ -20,7 +20,7 @@ import soundFile from "./sevenrings.mp3";
 
 // Initialize core ThreeJS components
 const camera = new PerspectiveCamera();
-const scene = new PathTest(camera);
+var scene = new PathTest(camera);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
@@ -92,8 +92,8 @@ function pauseGame() {
 
 function lose() {
   gameOver = true;
-  scene.state.gameEnded = true;
-  console.log("lose");
+  // scene.state.gameEnded = true;
+  // console.log("lose");
   audioElement.pause();
   audioElement.currentTime = 0;
   currentlyPlaying = false;
@@ -180,6 +180,12 @@ const onAnimationFrameHandler = (timeStamp) => {
   renderer.render(scene, camera);
   scene.update && scene.update(timeStamp);
   window.requestAnimationFrame(onAnimationFrameHandler);
+
+  // move to game over screen
+  if (scene.state.gameEnded == true) {
+    var gOScene = new GameOver();
+    scene = gOScene;
+  }
 
   if (scene.state.offTrack && !scene.state.gameEnded) {
     lose();
