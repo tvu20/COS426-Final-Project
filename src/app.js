@@ -92,8 +92,6 @@ function pauseGame() {
 
 function lose() {
   gameOver = true;
-  // scene.state.gameEnded = true;
-  // console.log("lose");
   audioElement.pause();
   audioElement.currentTime = 0;
   currentlyPlaying = false;
@@ -185,6 +183,7 @@ const onAnimationFrameHandler = (timeStamp) => {
   if (scene.state.gameEnded == true) {
     var gOScene = new GameOver();
     scene = gOScene;
+    camera.position.set(0, 0, 40);
   }
 
   if (scene.state.offTrack && !scene.state.gameEnded) {
