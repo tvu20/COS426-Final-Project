@@ -27,6 +27,7 @@ class Road extends Group {
     this.blocks = [];
     this.blockCollisions = [];
     this.coins = [];
+    this.coinCollisions = [];
 
     // Add self to parent's update list
     parent.addToUpdateList(this);
@@ -81,6 +82,7 @@ class Road extends Group {
     if (makeCoin) {
       const coin = new Coin(this);
       this.coins.push(coin);
+      this.coinCollisions.push(coin.bb);
       this.add(coin);
     }
   }
@@ -108,17 +110,29 @@ class Road extends Group {
     for (let i = 0; i < this.coins.length; i++) {
       const coin = this.coins[i];
 
-      if (coin.position.z > this.state.cameraPosition.z) {
-        // removing offscreen coin
-        this.coins.shift();
+      // collecting the coin
+      if (coin.state.collected) {
+        this.coins = this.coins.filter((c) => c !== coin);
+        this.coinCollisions = this.coinCollisions.filter((c) => c !== coin.bb);
+        this.remove(coin.bb);
         this.remove(coin);
       } else {
-        coin.updatePosition();
+        if (coin.position.z > this.state.cameraPosition.z) {
+          // removing offscreen coin
+          this.coins.shift();
+          this.coinCollisions.shift();
+          this.remove(coin.bb);
+          this.remove(coin);
+        } else {
+          coin.updatePosition();
+        }
       }
     }
   }
 
   update(timeStamp) {
+    this.state.time++;
+
     if (!this.initialized) {
       this.addBlock();
       this.initialized = true;
@@ -139,10 +153,8 @@ class Road extends Group {
         this.initBlock.updatePosition();
       }
     }
-
     this.updateBlocks();
-
-    this.state.time++;
+    // this.state.time++;
   }
 }
 

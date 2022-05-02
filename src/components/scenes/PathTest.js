@@ -19,6 +19,11 @@ class PathTest extends Scene {
       updateList: [],
       sinceLastCollision: 0,
       offTrack: false,
+      gameStarted: false,
+      gameEnded: false,
+      paused: false,
+      sinceFalling: 0,
+      score: 0,
     };
 
     // Set background to a nice color
@@ -27,10 +32,14 @@ class PathTest extends Scene {
     // camera
     this.camera = camera;
 
+    // this.init();
+
     // frequency data
     this.freqData = [];
     this.beat = false;
+  }
 
+  init() {
     // Add meshes to scene
     const road = new Road(this);
     const lights = new BasicLights();
@@ -39,31 +48,23 @@ class PathTest extends Scene {
 
     this.road = road;
     this.ball = ball;
-
-    // Populate GUI
-    // this.state.gui.add(this.state, "movementSpeed", 0.05, 1);
   }
 
   move(direction) {
+    let EPS = 1;
+    let onGround = this.ball.position.y <= this.ball.yPos + EPS;
+
     switch (direction) {
       case "ArrowLeft":
-        var obj = this.getObjectByName("ball");
-        obj.left();
+        if (onGround) this.ball.left();
         break;
       case "ArrowRight":
-        var obj = this.getObjectByName("ball");
-        obj.right();
-
+        if (onGround) this.ball.right();
         break;
 
       case "ArrowUp":
-        var obj = this.getObjectByName("ball");
-        obj.jump();
+        this.ball.jump();
         break;
-
-      // case "ArrowDown":
-      //   var obj = this.getObjectByName("ball");
-      //   obj.fall();
     }
   }
 
@@ -79,12 +80,18 @@ class PathTest extends Scene {
     this.beat = false;
   }
 
+  incrementScore() {
+    this.state.score++;
+  }
+
   findCollision() {
     let roadCollisions = this.road.blockCollisions;
+    let coinCollisions = this.road.coinCollisions;
 
     let ballMesh = this.ball.bb;
     let ballBB = new THREE.Box3().setFromObject(ballMesh);
 
+    // road collisions
     for (const mesh of roadCollisions) {
       let meshBB = new THREE.Box3();
       mesh.geometry.computeBoundingBox();
@@ -94,8 +101,10 @@ class PathTest extends Scene {
         ballBB.intersectsBox(meshBB) ||
         this.ball.position.y > this.ball.yPos
       ) {
+        // console.log("collide");
         this.state.sinceLastCollision = 0;
       } else {
+        // console.log("not collide");
         this.state.sinceLastCollision++;
       }
 
@@ -105,24 +114,54 @@ class PathTest extends Scene {
         this.state.offTrack = true;
       }
     }
+
+    // coin collisions
+    for (let i = 0; i < coinCollisions.length; i++) {
+      let mesh = coinCollisions[i];
+      // for (const mesh of coinCollisions) {
+      let meshBB = new THREE.Box3();
+      mesh.geometry.computeBoundingBox();
+      meshBB.copy(mesh.geometry.boundingBox).applyMatrix4(mesh.matrixWorld);
+
+      if (ballBB.intersectsBox(meshBB)) {
+        let currentCoin = this.road.coins[i];
+
+        if (!currentCoin.state.collected) {
+          currentCoin.collect();
+          this.incrementScore();
+        }
+      }
+    }
   }
 
   update(timeStamp) {
     const { updateList } = this.state;
 
-    // Call update for each object in the updateList
-    for (const obj of updateList) {
-      obj.update(timeStamp);
-    }
+    if (this.state.gameStarted && !this.state.paused) {
+      // Call update for each object in the updateList
+      for (const obj of updateList) {
+        obj.update(timeStamp);
+      }
 
-    var obj = this.getObjectByName("ball");
-    if (obj !== undefined && obj.state.isFallen) {
-      this.remove(obj);
-      //enter game end state
-    }
+      var obj = this.getObjectByName("ball");
+      if (obj !== undefined && obj.state.isFallen) {
+        this.remove(obj);
+        //enter game end state
+      }
 
-    if (!this.state.offTrack) {
-      this.findCollision();
+      if (!this.state.offTrack) {
+        this.findCollision();
+      }
+
+      // if falling
+      if (this.state.offTrack) {
+        this.state.sinceFalling++;
+        if (this.state.sinceFalling > 80) {
+          this.state.offTrack = false;
+          this.state.paused = true;
+          this.state.gameStarted = false;
+        }
+      }
     }
   }
 }
