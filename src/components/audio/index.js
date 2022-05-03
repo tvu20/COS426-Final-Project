@@ -1,1 +1,1 @@
-export { default as AudioData } from "./Audio.js";
+export { default as AudioData } from "./AudioData.js";

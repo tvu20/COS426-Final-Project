@@ -1,6 +1,6 @@
 // this code was referenced from the mp3js project
 
-class LinkedListNode {
+class Node {
   constructor(data) {
     this.data = data;
     this.next = null;
@@ -16,7 +16,7 @@ class AudioData {
   }
 
   add(energy) {
-    const node = new LinkedListNode(energy);
+    const node = new Node(energy);
     if (this.head == null) {
       this.head = node;
     } else {
