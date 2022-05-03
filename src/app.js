@@ -24,8 +24,6 @@ var scene = new PathTest(camera);
 const renderer = new WebGLRenderer({ antialias: true });
 
 // Set up camera
-// camera.position.set(0, 5, 30);
-// camera.position.set(0, 10, 20);
 camera.position.set(0, 20, 20);
 camera.lookAt(new Vector3(0, 0, 0));
 
@@ -74,7 +72,18 @@ let gameOver = false;
 let initialized = false;
 let gameStarted = false;
 
+// score
+let score = 0;
+let scoreDiv = document.getElementById("score");
+scoreDiv.innerHTML = "Score: " + score;
+
+let introContainer = document.getElementById("intro-container");
+let endScreen = document.getElementById("ending-screen");
+let resetButton = document.getElementById("reset-btn");
+
 function beginGame() {
+  introContainer.style.display = "none";
+
   audioElement.play();
   scene.state.gameStarted = true;
   scene.state.paused = false;
@@ -91,24 +100,22 @@ function pauseGame() {
 }
 
 function lose() {
+  scoreDiv.style.display = "none";
   gameOver = true;
   audioElement.pause();
   audioElement.currentTime = 0;
   currentlyPlaying = false;
 }
 
-// score
-let score = 0;
-let scoreDiv = document.getElementById("score");
-scoreDiv.innerHTML = "Score: " + score;
+function restart() {
+  window.location.reload();
+}
+
+resetButton.addEventListener("click", restart);
 
 // --------------------
 // AUDIO
 // --------------------
-
-// set up canvas context for visualizer
-var canVas = document.querySelector(".visualizer");
-var canvasCtx = canVas.getContext("2d");
 
 var audiodata = new AudioData();
 let time = 0;
@@ -132,7 +139,7 @@ track.connect(analyser);
 analyser.connect(audioContext.destination);
 
 // select our play button
-const playButton = document.querySelector("button");
+const playButton = document.getElementById("start-btn");
 
 playButton.addEventListener(
   "click",
@@ -143,18 +150,14 @@ playButton.addEventListener(
     }
 
     // play or pause track depending on state
-    // if (this.dataset.playing === "false") {
     if (!currentlyPlaying) {
       beginGame();
       audioElement.play();
       currentlyPlaying = true;
-      // this.dataset.playing = "true";
-      // } else if (this.dataset.playing === "true") {
     } else if (currentlyPlaying) {
       pauseGame();
       audioElement.pause();
       currentlyPlaying = false;
-      // this.dataset.playing = "false";
     }
   },
   false
@@ -184,6 +187,7 @@ const onAnimationFrameHandler = (timeStamp) => {
     var gOScene = new GameOver();
     scene = gOScene;
     camera.position.set(0, 0, 40);
+    endScreen.style.display = "flex";
   }
 
   if (scene.state.offTrack && !scene.state.gameEnded) {
