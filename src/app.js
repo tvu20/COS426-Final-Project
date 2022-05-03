@@ -132,11 +132,30 @@ const analyser = audioContext.createAnalyser();
 //   maxDelayTime: 0.5,
 // });
 
-const audioElement = document.querySelector("audio");
-audioElement.src = soundFile;
+// uploading audio
+var file = document.getElementById("fileInput");
+var audioElement = document.getElementById("audio");
+audioElement.src = soundFile; // setting as default
 const track = audioContext.createMediaElementSource(audioElement);
 track.connect(analyser);
 analyser.connect(audioContext.destination);
+
+let prevInAudio;
+let src;
+// let context;
+// let analyser;
+
+file.onchange = (event) => {
+  uploadAudio(file, true);
+};
+
+function uploadAudio(f, isFile) {
+  // updating the audio file
+  if (f && isFile) {
+    var files = f.files;
+    audioElement.src = URL.createObjectURL(files[0]);
+  }
+}
 
 // select our play button
 const playButton = document.getElementById("start-btn");

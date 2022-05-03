@@ -89,6 +89,18 @@
         <p>
         Use the arrow keys to move: Left and Right to change directions, and Up to jump. Whatever you do, make sure to stay on track!
         </p>
+
+        <!-- audio uploading -->
+        <input type="file" id="fileInput" name="file" accept="audio/*" hidden="hidden">
+        <audio id="audio"></audio>
+        <button type="button" id="custom-button">UPLOAD AUDIO</button>
+        <br>
+        <span id="custom-text">Upbeat.mp3</span>
+        <br><br>
+            <!-- <audio id="df-audio">
+                <source src="./default.mp3" type="audio/mp3">
+            </audio> -->
+
         <button id="start-btn" data-playing="false" role="switch" aria-checked="false" >
             <span>Play</span>
         </button>
@@ -100,4 +112,25 @@
         <button id="reset-btn">Play Again</button>
     </div>
 </body>
+
+<script>
+const realFileBtn = document.getElementById("fileInput");
+const customBtn = document.getElementById("custom-button");
+const customTxt = document.getElementById("custom-text");
+const audio = document.getElementById('audio');
+
+customBtn.addEventListener("click", function () {
+    realFileBtn.click();
+});
+
+realFileBtn.addEventListener("change", function () {
+    if (realFileBtn.value) {
+        customTxt.innerHTML = realFileBtn.value.match(
+            /[\/\\]([\w\d\s\.\-\(\)\'\"]+)$/
+        )[1];
+    }
+});
+
+</script>
+
 </html>
