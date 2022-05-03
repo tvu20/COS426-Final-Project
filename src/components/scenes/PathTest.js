@@ -115,9 +115,9 @@ class PathTest extends Scene {
 
     if (!collidesWithRoad) {
       this.state.sinceLastCollision++;
-      console.log("no collision");
+      // console.log("no collision");
     } else {
-      console.log("collision");
+      // console.log("collision");
       this.state.sinceLastCollision = 0;
     }
 
