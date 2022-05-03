@@ -75,6 +75,7 @@ let gameStarted = false;
 // score
 let score = 0;
 let scoreDiv = document.getElementById("score");
+let finalScore = document.getElementById("final-score");
 scoreDiv.innerHTML = "Score: " + score;
 
 let introContainer = document.getElementById("intro-container");
@@ -105,6 +106,7 @@ function lose() {
   audioElement.pause();
   audioElement.currentTime = 0;
   currentlyPlaying = false;
+  finalScore.innerHTML = "Score: " + score;
 }
 
 function restart() {
@@ -207,6 +209,7 @@ const onAnimationFrameHandler = (timeStamp) => {
     scene = gOScene;
     camera.position.set(0, 0, 40);
     endScreen.style.display = "flex";
+    // scoreDiv.innerHTML = "Score: " + score;
   }
 
   if (scene.state.offTrack && !scene.state.gameEnded) {

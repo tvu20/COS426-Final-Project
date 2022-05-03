@@ -43,7 +43,6 @@ class GameOver extends Scene {
       flower.position.y,
       flower.position.z
     );
-    console.log(position);
 
     const gO = new GameOverText(this, position);
     this.add(gO);

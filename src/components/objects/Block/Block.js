@@ -1,6 +1,7 @@
 import { Group } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import MODEL from "./scene.gltf";
+import MODEL from "./scene.glb";
+// import MODEL from "./scene.gltf";
 import * as THREE from "three";
 
 class Block extends Group {

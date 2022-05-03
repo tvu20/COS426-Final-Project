@@ -164,7 +164,6 @@ class PathTest extends Scene {
         if (this.state.sinceFalling > 80) {
           // testing yasmine's code
           this.state.gameEnded = true;
-          console.log("GOT TO GAME OVER");
           // console.log(this.state.gameEnded);
 
           // this.state.offTrack = false;

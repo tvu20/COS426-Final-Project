@@ -36,13 +36,29 @@
             #start-btn {
                 width: 200px;
                 height: 40px;
-                margin: 20px auto 0;
+                margin: 0px auto 0;
                 font-weight: bold;
                 font-size: 20px;
                 background-color: #fff;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer
+            }
+
+            #custom-button {
+                border: none;
+                border-radius: 5px;
+                background-color: #fff;
+                padding: 10px 20px;
+                margin-top: 10px;
+                cursor: pointer;
+            }
+
+            #custom-text {
+                font-family: "Inconsolata", monospace;
+                font-size: 1em;
+                color: #000;
+                margin: 0 0 10px;
             }
 
             #reset-btn {
@@ -61,6 +77,12 @@
                 position: fixed;
                 top: 20px;
                 left: 20px;
+                font-family: "Inconsolata", monospace;
+                font-size: 1.5em;
+                color: #fff;
+            }
+
+            #final-score {
                 font-family: "Inconsolata", monospace;
                 font-size: 1.5em;
                 color: #fff;
@@ -95,11 +117,8 @@
         <audio id="audio"></audio>
         <button type="button" id="custom-button">UPLOAD AUDIO</button>
         <br>
-        <span id="custom-text">Upbeat.mp3</span>
+        <span id="custom-text">sevenrings.mp3</span>
         <br><br>
-            <!-- <audio id="df-audio">
-                <source src="./default.mp3" type="audio/mp3">
-            </audio> -->
 
         <button id="start-btn" data-playing="false" role="switch" aria-checked="false" >
             <span>Play</span>
@@ -108,7 +127,8 @@
     <div id="score"></div>
     
     <div id="ending-screen">
-        <div style="height: 60px"></div>
+        <div style="height: 130px"></div>
+        <div id="final-score">Score: </div>
         <button id="reset-btn">Play Again</button>
     </div>
 </body>

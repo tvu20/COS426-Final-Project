@@ -10,7 +10,7 @@ import {
   MeshPhongMaterial,
   Mesh,
 } from "three";
-import MODEL from "./scene.gltf";
+import MODEL from "./scene.glb";
 
 class Ball extends Group {
   constructor(parent) {

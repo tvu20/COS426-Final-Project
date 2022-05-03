@@ -47,10 +47,6 @@ class GameOverText extends Group {
         gameOverMesh.position.x = positionInput.x;
         gameOverMesh.position.y = positionInput.y;
         gameOverMesh.position.z = positionInput.z;
-
-        console.log("position x", gameOverMesh.position.x);
-        console.log("position y", gameOverMesh.position.y);
-        console.log("position z", gameOverMesh.position.z);
         gameOverMesh.scale.multiplyScalar(2);
         gameOverMesh.rotation.set(0, 0, 0);
         gameOverMesh.name = "Game Over";
