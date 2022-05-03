@@ -68,6 +68,7 @@ class PathTest extends Scene {
         break;
 
       case "ArrowUp":
+      case " ":
         this.ball.jump();
         break;
     }
@@ -96,6 +97,8 @@ class PathTest extends Scene {
     let ballMesh = this.ball.bb;
     let ballBB = new THREE.Box3().setFromObject(ballMesh);
 
+    let collidesWithRoad = false;
+
     // road collisions
     for (const mesh of roadCollisions) {
       let meshBB = new THREE.Box3();
@@ -106,18 +109,22 @@ class PathTest extends Scene {
         ballBB.intersectsBox(meshBB) ||
         this.ball.position.y > this.ball.yPos
       ) {
-        // console.log("collide");
-        this.state.sinceLastCollision = 0;
-      } else {
-        // console.log("not collide");
-        this.state.sinceLastCollision++;
+        collidesWithRoad = true;
       }
+    }
 
-      if (this.state.sinceLastCollision > 20) {
-        var obj = this.getObjectByName("ball");
-        obj.fall();
-        this.state.offTrack = true;
-      }
+    if (!collidesWithRoad) {
+      this.state.sinceLastCollision++;
+      console.log("no collision");
+    } else {
+      console.log("collision");
+      this.state.sinceLastCollision = 0;
+    }
+
+    if (this.state.sinceLastCollision > 1) {
+      var obj = this.getObjectByName("ball");
+      obj.fall();
+      this.state.offTrack = true;
     }
 
     // coin collisions
