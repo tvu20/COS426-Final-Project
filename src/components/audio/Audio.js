@@ -1,3 +1,5 @@
+// this code was referenced from the mp3js project
+
 class LinkedListNode {
   constructor(data) {
     this.data = data;
@@ -36,19 +38,6 @@ class AudioData {
       return 0;
     }
     return this.sum / this.size;
-  }
-
-  variance(average) {
-    if (this.head == null) {
-      return 0;
-    }
-    var sum = 0;
-    var node = this.head;
-    for (var i = 0; i < this.size; i++) {
-      sum += (node.data - average) * (node.data - average);
-      node = node.next;
-    }
-    return sum / 30;
   }
 }
 
